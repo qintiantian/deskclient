@@ -1,0 +1,10 @@
+body, li, ul, div{
+    margin:0;
+    padding:0
+}
+li{
+    list-style: none;
+}
+input,select,option,textarea,button{
+    outline:none;
+}

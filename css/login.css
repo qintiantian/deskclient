@@ -1,0 +1,29 @@
+.container{
+    background-color: #F5F5F5;
+    width:100%;
+}
+.content{
+    margin:0 auto;
+}
+input{
+    width:200px;
+    padding:5px;
+
+}
+.form{
+    margin-top:90px;
+}
+.row{
+    text-align: center;
+    margin-top: 30px;
+}
+.login-btn{
+    background-color: #1AAD19;
+    color:#ffffff;
+    width:100px;
+    padding:10px;
+    text-align: center;
+}
+.login-btn:hover{
+    background-color: #129611;
+}

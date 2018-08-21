@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+<div id="app" class="container">
+    <div class="left">
+        <ul>
+            <li>
+                <a>
+                    <img id="profile" src="imgs/konglk.jpg">
+                </a>
+            </li>
+            <li>
+                <a>
+                    <img src="imgs/p1.png">
+                </a>
+            </li>
+            <li>
+                <a>
+                    <img src="imgs/p2.png">
+                </a>
+            </li>
+            <li>
+                <a>
+                    <img src="imgs/p3.png">
+                </a>
+            </li>
+            <li>
+                <a>
+                    <img id="settings" src="imgs/p4.png">
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="median">
+        <div class="search">
+            <i class="fa fa-search"></i>
+            <input class="" id="search-input" type="text" placeholder=""/>
+        </div>
+        <div class="conversations">
+            <ul>
+                <li v-for="conversation in conversations">
+                    <span><img v-bind:src="conversation.imgUrl"></span>
+                    <span>
+                        <span class="nickname">{{conversation.nickname}}</span>
+                        <span class="last-date">{{conversation.lastDate}}</span>
+                        <span class="last-msg">{{conversation.lastMsg}}</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="right">
+        <div class="separator"></div>
+        <div class="chat-person">
+            <span>{{chatPerson.nickname}}</span>
+        </div>
+        <div class="chat-area">
+            <ul>
+                <li v-for="message in messages">
+                    <div v-if="message.userId==user.userId">
+                        <a class="myself"><img v-bind:src="user.imgUrl"></a>
+                        <span class="myself">{{message.content}}</span>
+                    </div>
+                    <div v-else>
+                        <a class="other-person"><img v-bind:src="chatPerson.imgUrl"></a>
+                        <span class="other-person">{{message.content}}</span>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="send-area">
+            <div class=""></div>
+            <div class="content-area">
+                <textarea rows="4" class="content"></textarea>
+            </div>
+            <div class="">
+                <button v-on:click="sendMsg" class="send-btn">发送(S)</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/index.js"></script>
+</body>
+</html>

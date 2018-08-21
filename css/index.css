@@ -1,0 +1,192 @@
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+    width:6px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.3);*/
+    /*border-radius:10px;*/
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius:10px;
+    background:rgba(0,0,0,0.1);
+    -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    /*background:rgba(255,0,0,0.4);*/
+}
+
+.container{
+    width: 100%;
+
+}
+.left{
+    width: 60px;
+    background-color: rgb(40,40,41);
+    text-align: center;
+    position:relative;
+}
+.left ul li{
+    margin-top:20px;
+}
+.left ul li:hover{
+    cursor: pointer;
+}
+.left ul li img{
+    width:29px;
+}
+#profile{
+    width: 35px;
+}
+#settings{
+    position: absolute;
+    left:10px;
+    bottom: 10px;
+}
+.median{
+    width: 252px;
+    background-color: #EEEAE8;
+}
+.right{
+    width: 515px;
+    min-width: 300px;
+    background-color: #F5F5F5;
+    position: relative;
+}
+.separator{
+    width:100%;
+    position: absolute;
+    top:50px;
+    border-bottom:solid 1px #e7e7e7;
+}
+.chat-person,.chat-area, .send-area{
+    padding:0 20px;
+}
+.left, .median, .right{
+    float: left;
+    height: 553px;
+}
+.nickname{
+    position: absolute;
+    font-weight: 500;
+    color:#000000;
+}
+.last-date{
+    color: #B9B9B9;
+    float:right;
+    font-size:0.7em;
+}
+.last-msg{
+    color:#999999;
+    font-size: 0.7em;
+}
+.conversations li{
+    padding:10px 6px 6px 6px;
+    height: 50px;
+    position: relative;
+}
+
+.conversations li:hover{
+    background-color: #DFDDDB;
+}
+.conversations li img{
+    width:40px;
+}
+.search{
+    padding:20px 6px 6px 8px;
+    position: relative;
+}
+.search i{
+    width:200px;
+    position: absolute;
+    left: 15px;
+    top: 24px;
+    color:#636363;
+    font-size:12px;
+}
+#search-input{
+    background-color:#DBD9D8;
+    border-radius: 8px;
+    border:1px solid #DBDBDB;
+    height: 20px;
+    padding:2px;
+}
+.chat-person{
+    font-size: 1.2em;
+
+    height: 60px;
+    font-weight: bold;
+    line-height: 60px;
+}
+.myself{
+    float:right;
+}
+.other-person{
+    float:left;
+}
+.myself img, .other-person img{
+    width:35px;
+}
+.chat-area{
+    height:360px;
+    overflow: scroll;
+}
+.clear{
+    clear:both;
+}
+span.myself{
+    background-color:#9EEA6A ;
+    margin-right:10px;
+}
+span.other-person{
+    margin-left:10px;
+    background-color: #ffffff;
+}
+span.myself:after, span.other-person:before{
+    width:0;
+    height:0;
+    border:4px solid transparent;
+    position: absolute;
+    top:6px;
+    content:""
+}
+span.other-person:before{
+    border-right-color:#FFFFFF ;
+    right:100%;
+}
+span.myself:after{
+    border-left-color:#9EEA6A ;
+    left:100%;
+}
+span.myself, span.other-person{
+    padding:4px 4px 4px 10px;
+    line-height:25px;
+    font-weight: 500;
+    position:relative;
+}
+.send-area{
+    background-color: #ffffff;
+    height: 130px;
+    position: relative;
+}
+.content{
+    border: none;
+    width:100%;
+    resize: none;
+    overflow:auto;
+    font-weight: 500;
+    font-size:1.2em;
+}
+.send-btn{
+    padding:5px;
+    position:absolute;
+    bottom: 10px;
+    right:25px;
+    border:0;
+    background-color: #F5F5F5;
+}
+.send-btn:hover{
+    background-color: #129611;
+    color:#FFFFFF;
+}
