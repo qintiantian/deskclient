@@ -2,7 +2,6 @@ const Vue = require('./js/vue')
 const messages = require("./js/message_pb")
 const $ = require('jquery')
 const uuid = require('uuid')
-const http = require('http')
 const remote = require('electron').remote
 
 let sharedObject = remote.getGlobal("sharedObject")
@@ -65,10 +64,15 @@ const modelData = {
 
 };
 
+let header = {
+    'userId': sharedObject.userId,
+    'certificate': sharedObject.certificate
+}
+
 let vm = new Vue({
     el: '#app',
     data: modelData,
-    methods:{
+    methods: {
         sendMsg: function (event) {
             let content = $('.content').val()
             let message = new messages.ProtocolMessage()
@@ -87,19 +91,39 @@ let vm = new Vue({
             client.write(Buffer.from(bytes))
             $('.content').val('')
             let m = {
-                    "userId": this.user.userId,
-                    "destId": this.chatPerson.userId,
-                    "content": content,
-                    "createtime": new Date()
-                }
+                "userId": this.user.userId,
+                "destId": this.chatPerson.userId,
+                "content": content,
+                "createtime": new Date()
+            }
             modelData.messages.push(m)
+        },
+        getUserProfile: function () {
+            let path = '/user/profile/' + sharedObject.userId + '/' + sharedObject.certificate
+            $.get({
+                url: sharedObject.url + path,
+                headers: header
+            }).done(function (res) {
+                modelData.user.userId = res.userId
+                modelData.user.nickname = res.nickname
+                modelData.user.imgUrl = res.imgUrl
+            }).fail(function (err) {
+                console.log('获取用户信息失败')
+            })
+        },
+        getConversations: function () {
+            let path = '/user/conversation/'+sharedObject.userId
+            $.get({
+                url: sharedObject.url+path,
+                headers:header
+            }).done(function (res) {
+                
+            })
         }
     }
 })
 
-var destId='18062742155'
-
-
+var destId = '18062742155'
 
 client.on('data', function (bytes) {
     let message = messages.ProtocolMessage.deserializeBinary(bytes)
@@ -120,16 +144,11 @@ client.on('close', function () {
     console.log("connection closed")
 })
 
-http.get({
-    hostname:sharedObject.host,
-    port:sharedObject.httpport,
-    path:'/user/profile/'+sharedObject.userId+'/'+sharedObject.certificate
-}, (res)=>{
-    console.log(res)
-    modelData.user.userId = res.userId
-    modelData.user.nickname = res.nickname
-    modelData.user.imgUrl = res.imgUrl
-})
+vm.getUserProfile()
+
+
+
+
 
 
 

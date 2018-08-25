@@ -7,8 +7,8 @@ let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
 
 let modelData = {
-    'userId': '',
-    'pwd': ''
+    'userId': '18062743820',
+    'pwd': 'konglk'
 
 }
 
