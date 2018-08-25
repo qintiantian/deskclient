@@ -3,6 +3,8 @@ const messages = require("./js/message_pb")
 const $ = require('jquery')
 const uuid = require('uuid')
 const remote = require('electron').remote
+
+let client = remote.getGlobal("sharedObject").client
 const modelData = {
     user: {
         "nickname": "千里阵云",
@@ -95,7 +97,7 @@ let vm = new Vue({
 
 var destId='qintian'
 
-let client = remote.getGlobal("sharedObject").client
+
 
 client.on('data', function (bytes) {
     let message = messages.ProtocolMessage.deserializeBinary(bytes)

@@ -3,16 +3,18 @@ const {ipcRenderer, remote} = require('electron')
 const messages = require("./js/message_pb")
 const uuid = require('uuid')
 
+let client = remote.getGlobal("sharedObject").client
+
 let modelData = {
-    'userId':'',
-    'pwd':''
+    'userId': '',
+    'pwd': ''
 
 }
 
 let vm = new Vue({
     el: '#app',
-    data:modelData,
-    methods:{
+    data: modelData,
+    methods: {
         login: function () {
             let message = new messages.ProtocolMessage()
             let req = new messages.ProtocolMessage.TRequest()
@@ -28,9 +30,20 @@ let vm = new Vue({
             message.setRequest(req)
             let bytes = message.serializeBinary()
             client.write(Buffer.from(bytes))
-            ipcRenderer.send('index-show')
         }
     }
 })
 
-let client= remote.getGlobal("sharedObject").client
+client.on("data", function (bytes) {
+    let message = messages.ProtocolMessage.deserializeBinary(bytes)
+    console.log(message)
+    let response = message.getResponse()
+    let respType = response.getResptype()
+    let resp = response.getResp();
+    console.log(resp)
+    if (respType== 200)
+        ipcRenderer.send('index-show')
+    else {
+        remote.dialog.showErrorBox('error','用户名密码错误')
+    }
+})

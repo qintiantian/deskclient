@@ -11,9 +11,10 @@ ipcMain.on('index-show', function () {
     indexWin.loadFile('index.html')
     indexWin.webContents.openDevTools()
     indexWin.on('closed', () => {
+        client.destroy()
         win[1] = null
     })
-    win[0].close()
+     win[0].close()
 })
 
 function createWindow () {
@@ -28,7 +29,6 @@ function createWindow () {
 
     // 当 window 被关闭，这个事件会被触发。
     mainWin.on('closed', () => {
-        client.destroy()
         win[0] = null
     })
 }

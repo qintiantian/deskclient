@@ -16,8 +16,11 @@
     "http-errors": "~1.6.2",
     "jquery": "^3.3.1",
     "morgan": "~1.9.0",
+    "npm": "^6.4.0",
     "pug": "2.0.0-beta11",
     "remote": "^0.2.6",
+    "to": "^0.2.9",
+    "update": "^0.7.4",
     "uuid": "latest",
     "vue": "^2.5.17"
   }
