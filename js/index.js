@@ -18,18 +18,18 @@ const modelData = {
         "imgUrl": "imgs/qintian.jpg"
     },
     conversations: [
-        {
-            "imgUrl": "imgs/qintian.jpg",
-            "nickname": "秦田",
-            "lastMsg": "我到家了",
-            "lastDate": "星期三"
-        },
-        {
-            "imgUrl": "imgs/qintian.jpg",
-            "nickname": "老婆",
-            "lastMsg": "放假，我到家了",
-            "lastDate": "星期五"
-        }
+        // {
+        //     "imgUrl": "imgs/qintian.jpg",
+        //     "nickname": "秦田",
+        //     "lastMsg": "我到家了",
+        //     "lastDate": "星期三"
+        // },
+        // {
+        //     "imgUrl": "imgs/qintian.jpg",
+        //     "nickname": "老婆",
+        //     "lastMsg": "放假，我到家了",
+        //     "lastDate": "星期五"
+        // }
     ],
     messages: [
         {
@@ -117,7 +117,7 @@ let vm = new Vue({
                 url: sharedObject.url+path,
                 headers:header
             }).done(function (res) {
-                
+                modelData.conversations = res;
             })
         }
     }
@@ -145,6 +145,7 @@ client.on('close', function () {
 })
 
 vm.getUserProfile()
+vm.getConversations()
 
 
 
