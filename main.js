@@ -55,13 +55,17 @@ app.on('activate', () => {
     }
 })
 
-var host='localhost'
-var port='8090'
+var host='192.168.1.21'
+var tcpport='8090'
 let client = new net.Socket()
-client.connect(port, host, function () {
+client.connect(tcpport, host, function () {
     console.log('connect')
 })
 
 global.sharedObject = {
-    client: client
+    client: client,
+    userId:'',
+    certificate:'',
+    host:host,
+    httpport:'8080'
 }

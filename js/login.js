@@ -3,7 +3,8 @@ const {ipcRenderer, remote} = require('electron')
 const messages = require("./js/message_pb")
 const uuid = require('uuid')
 
-let client = remote.getGlobal("sharedObject").client
+let sharedObject = remote.getGlobal("sharedObject")
+let client = sharedObject.client
 
 let modelData = {
     'userId': '',
@@ -38,11 +39,14 @@ client.on("data", function (bytes) {
     let message = messages.ProtocolMessage.deserializeBinary(bytes)
     console.log(message)
     let response = message.getResponse()
-    let respType = response.getResptype()
+    // let respType = response.getResptype()
     let resp = response.getResp();
     console.log(resp)
-    if (respType== 200)
+    if (resp.getCode()== 200) {
+        sharedObject.userId = resp.getUserid()
+        sharedObject.certificate = resp.getCertificate()
         ipcRenderer.send('index-show')
+    }
     else {
         remote.dialog.showErrorBox('error','用户名密码错误')
     }

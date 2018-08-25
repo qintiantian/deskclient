@@ -1428,7 +1428,9 @@ proto.SResponse.prototype.toObject = function(opt_includeInstance) {
 proto.SResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     code: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    desc: jspb.Message.getFieldWithDefault(msg, 2, "")
+    desc: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    certificate: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    userid: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -1473,6 +1475,14 @@ proto.SResponse.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setDesc(value);
       break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCertificate(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserid(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1516,6 +1526,20 @@ proto.SResponse.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getCertificate();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = message.getUserid();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
 };
 
 
@@ -1546,6 +1570,36 @@ proto.SResponse.prototype.getDesc = function() {
 /** @param {string} value */
 proto.SResponse.prototype.setDesc = function(value) {
   jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string certificate = 3;
+ * @return {string}
+ */
+proto.SResponse.prototype.getCertificate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/** @param {string} value */
+proto.SResponse.prototype.setCertificate = function(value) {
+  jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string userId = 4;
+ * @return {string}
+ */
+proto.SResponse.prototype.getUserid = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/** @param {string} value */
+proto.SResponse.prototype.setUserid = function(value) {
+  jspb.Message.setProto3StringField(this, 4, value);
 };
 
 

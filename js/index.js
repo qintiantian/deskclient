@@ -2,9 +2,11 @@ const Vue = require('./js/vue')
 const messages = require("./js/message_pb")
 const $ = require('jquery')
 const uuid = require('uuid')
+const http = require('http')
 const remote = require('electron').remote
 
-let client = remote.getGlobal("sharedObject").client
+let sharedObject = remote.getGlobal("sharedObject")
+let client = sharedObject.client
 const modelData = {
     user: {
         "nickname": "千里阵云",
@@ -95,7 +97,7 @@ let vm = new Vue({
     }
 })
 
-var destId='qintian'
+var destId='18062742155'
 
 
 
@@ -116,6 +118,17 @@ client.on('data', function (bytes) {
 })
 client.on('close', function () {
     console.log("connection closed")
+})
+
+http.get({
+    hostname:sharedObject.host,
+    port:sharedObject.httpport,
+    path:'/user/profile/'+sharedObject.userId+'/'+sharedObject.certificate
+}, (res)=>{
+    console.log(res)
+    modelData.user.userId = res.userId
+    modelData.user.nickname = res.nickname
+    modelData.user.imgUrl = res.imgUrl
 })
 
 
