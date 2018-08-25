@@ -79,10 +79,10 @@
         <div class="send-area">
             <div class=""></div>
             <div class="content-area">
-                <textarea rows="4" class="content"></textarea>
+                <textarea rows="4" class="content" v-on:keyup.enter="sendMsg"></textarea>
             </div>
             <div class="">
-                <button v-on:click="sendMsg" class="send-btn">发送(S)</button>
+                <button v-on:click="sendMsg" class="send-btn"><span>发送(S)</span></button>
             </div>
         </div>
     </div>
