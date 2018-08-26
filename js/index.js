@@ -54,7 +54,8 @@ let vm = new Vue({
             client.write(Buffer.from(bytes))
             $('.content').val('')
             let m = {
-                "userId": this.user.userId,
+                "msgId": this.chatPerson.msgId,
+                "sendId": this.user.userId,
                 "destId": this.chatPerson.destId,
                 "content": content,
                 "createtime": new Date()
@@ -120,8 +121,6 @@ client.on('close', function () {
 })
 
 vm.init()
-
-
 
 
 
