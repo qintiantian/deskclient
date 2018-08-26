@@ -45,13 +45,16 @@
         </div>
         <div class="conversations">
             <ul>
-                <li v-for="conversation in conversations">
-                    <span><img v-bind:src="conversation.imgUrl"></span>
-                    <span>
-                        <span class="nickname">{{conversation.nickname}}</span>
-                        <span class="last-date">{{conversation.lastDate}}</span>
-                        <span class="last-msg">{{conversation.lastMsg}}</span>
-                    </span>
+                <li v-for="(conversation) in conversations">
+                    <div v-on:click="showHistoryMessage(conversation)">
+                        <input type="hidden" value="{{conversation.destId}}">
+                        <span><img v-bind:src="conversation.imgUrl"></span>
+                        <span>
+                            <span class="nickname">{{conversation.nickname}}</span>
+                            <span class="last-date">{{conversation.lastDate}}</span>
+                            <span class="last-msg">{{conversation.lastMsg}}</span>
+                        </span>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -64,7 +67,7 @@
         <div class="chat-area">
             <ul>
                 <li v-for="message in messages">
-                    <div v-if="message.userId==user.userId">
+                    <div v-if="message.sendId==user.userId">
                         <a class="myself"><img v-bind:src="user.imgUrl"></a>
                         <span class="myself">{{message.content}}</span>
                     </div>

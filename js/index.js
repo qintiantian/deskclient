@@ -8,60 +8,23 @@ let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
 const modelData = {
     user: {
-        "nickname": "千里阵云",
-        "userId": "konglk",
-        "imgUrl": "imgs/konglk.jpg"
+        'userId':'',
+        'nickname':'',
+        'imgUrl':''
     },
     chatPerson: {
-        "nickname": "左耳",
-        "userId": "qintian",
-        "imgUrl": "imgs/qintian.jpg"
+        'destId':'',
+        'nickname':'',
+        'imgUrl':''
     },
     conversations: [
-        // {
-        //     "imgUrl": "imgs/qintian.jpg",
-        //     "nickname": "秦田",
-        //     "lastMsg": "我到家了",
-        //     "lastDate": "星期三"
-        // },
-        // {
-        //     "imgUrl": "imgs/qintian.jpg",
-        //     "nickname": "老婆",
-        //     "lastMsg": "放假，我到家了",
-        //     "lastDate": "星期五"
-        // }
-    ],
-    messages: [
         {
-            "userId": "konglk",
-            "destId": "qintian",
-            "content": "吃饭了吗？",
-            "createtime": "2018-08-17",
-            "msgType": ""
-        },
-        {
-            "userId": "qintiant",
-            "destId": "kong",
-            "content": "吃了，你呢？",
-            "createtime": "2018-08-17",
-            "msgType": ""
-        },
-        {
-            "userId": "konglk",
-            "destId": "qintian",
-            "content": "我吃了，马上回家",
-            "createtime": "2018-08-17",
-            "msgType": ""
-        },
-        {
-            "userId": "qintiant",
-            "destId": "kong",
-            "content": "好的",
-            "createtime": "2018-08-17",
-            "msgType": ""
+            'nickname':'',
+            'lastDate':'',
+            'lastMsg':''
         }
-    ]
-
+    ],
+    messages: []
 };
 
 let header = {
@@ -81,7 +44,7 @@ let vm = new Vue({
             let chat = new messages.CPrivateChat()
             chat.setMsgid(uuid.v1())
             chat.setContent(Buffer.from(content))
-            chat.setDestid(destId)
+            chat.setDestid(this.chatPerson.destId)
             chat.setUserid(this.user.userId)
             chat.setChattype(messages.CPrivateChat.ChatType.ONE2ONE)
             chat.setDatatype(messages.CPrivateChat.DataType.TXT)
@@ -92,7 +55,7 @@ let vm = new Vue({
             $('.content').val('')
             let m = {
                 "userId": this.user.userId,
-                "destId": this.chatPerson.userId,
+                "destId": this.chatPerson.destId,
                 "content": content,
                 "createtime": new Date()
             }
@@ -119,11 +82,23 @@ let vm = new Vue({
             }).done(function (res) {
                 modelData.conversations = res;
             })
+        },
+        showHistoryMessage: function (conversation) {
+            this.chatPerson = conversation
+            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId
+            $.get({
+                url: sharedObject.url+path,
+                headers:header
+            }).done(function (res) {
+                modelData.messages = res
+            })
+        },
+        init:function () {
+            this.getUserProfile()
+            this.getConversations()
         }
     }
 })
-
-var destId = '18062742155'
 
 client.on('data', function (bytes) {
     let message = messages.ProtocolMessage.deserializeBinary(bytes)
@@ -144,8 +119,8 @@ client.on('close', function () {
     console.log("connection closed")
 })
 
-vm.getUserProfile()
-vm.getConversations()
+vm.init()
+
 
 
 
