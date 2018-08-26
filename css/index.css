@@ -93,6 +93,9 @@
 .conversations li img{
     width:40px;
 }
+.conversations li.active{
+    background-color: #BCBDBE;
+}
 .search{
     padding:20px 6px 6px 8px;
     position: relative;

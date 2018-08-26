@@ -21,7 +21,8 @@ const modelData = {
         {
             'nickname':'',
             'lastDate':'',
-            'lastMsg':''
+            'lastMsg':'',
+            'isActive': false
         }
     ],
     messages: []
@@ -35,6 +36,12 @@ let header = {
 let vm = new Vue({
     el: '#app',
     data: modelData,
+    watch: {
+        messages() {
+            $(".chat-area").scrollTop($(".chat-area").prop('scrollHeight')+$(".chat-area li").height()+40);
+            //document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight+$(".chat-area li").height;
+        }
+    },
     methods: {
         sendMsg: function (event) {
             let content = $('.content').val()
@@ -85,12 +92,15 @@ let vm = new Vue({
             })
         },
         showHistoryMessage: function (conversation) {
+            $(".conversations li").removeClass('active')
+            conversation.isActive = true;
             this.chatPerson = conversation
             let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId
             $.get({
                 url: sharedObject.url+path,
                 headers:header
             }).done(function (res) {
+                modelData.messages = []
                 modelData.messages = res
             })
         },

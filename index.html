@@ -45,7 +45,7 @@
         </div>
         <div class="conversations">
             <ul>
-                <li v-for="(conversation) in conversations">
+                <li v-for="(conversation) in conversations"  v-bind:class="{active: conversation.isActive}">
                     <div v-on:click="showHistoryMessage(conversation)">
                         <input type="hidden" value="{{conversation.destId}}">
                         <span><img v-bind:src="conversation.imgUrl"></span>
@@ -64,7 +64,7 @@
         <div class="chat-person">
             <span>{{chatPerson.nickname}}</span>
         </div>
-        <div class="chat-area">
+        <div class="chat-area" id="chat-area">
             <ul>
                 <li v-for="message in messages">
                     <div v-if="message.sendId==user.userId">
