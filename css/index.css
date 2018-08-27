@@ -135,6 +135,10 @@
     height:360px;
     overflow: scroll;
 }
+.chat-area li{
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
 .clear{
     clear:both;
 }
@@ -167,6 +171,8 @@ span.myself, span.other-person{
     line-height:25px;
     font-weight: 500;
     position:relative;
+    max-width: 65%;
+    word-break: break-all;
 }
 .send-area{
     background-color: #ffffff;
