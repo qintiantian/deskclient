@@ -73,6 +73,7 @@ let vm = new Vue({
             let path = '/user/profile/' + sharedObject.userId + '/' + sharedObject.certificate
             $.get({
                 url: sharedObject.url + path,
+                timeout:sharedObject.timeout,
                 headers: header
             }).done(function (res) {
                 modelData.user.userId = res.userId
@@ -86,6 +87,7 @@ let vm = new Vue({
             let path = '/user/conversation/'+sharedObject.userId
             $.get({
                 url: sharedObject.url+path,
+                timeout:sharedObject.timeout,
                 headers:header
             }).done(function (res) {
                 modelData.conversations = res;
@@ -98,6 +100,7 @@ let vm = new Vue({
             let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId
             $.get({
                 url: sharedObject.url+path,
+                timeout:sharedObject.timeout,
                 headers:header
             }).done(function (res) {
                 modelData.messages = []
