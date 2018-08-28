@@ -37,9 +37,10 @@ let vm = new Vue({
     el: '#app',
     data: modelData,
     watch: {
-        messages() {
-            $(".chat-area").scrollTop($(".chat-area").prop('scrollHeight')+$(".chat-area li").height()+40);
-            //document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight+$(".chat-area li").height;
+        messages:function(){
+            this.$nextTick(function(){
+                $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
+            })
         }
     },
     methods: {
