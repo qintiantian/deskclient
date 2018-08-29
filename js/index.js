@@ -46,9 +46,8 @@ let vm = new Vue({
     },
     methods: {
         scrollEvent: function(event) {
-            if(event.srcElement.scrollTop == 0 && !modelData.scrollEnd){
-                let conversation = {destId: this.chatPerson.destId, msgId: modelData.pageNo+1}
-                modelData.pageNo++
+            if(event.srcElement.scrollTop <= 10 && !modelData.scrollEnd){
+                let conversation = {destId: this.chatPerson.destId, msgId: modelData.messages[0].msgId}
                 this.showHistoryMessage(conversation);
             }
         },
@@ -108,11 +107,10 @@ let vm = new Vue({
         },
         showHistoryMessageByClick: function (conversation) {
             $(".conversations li").removeClass('active')
-            console.info(conversation)
             this.chatPerson.destId = conversation.destId;
             this.chatPerson.imgUrl = conversation.imgUrl;
             this.chatPerson.nickname = conversation.nickname;
-            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-1'
+            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-2'
             $.get({
                 url: sharedObject.url+path,
                 timeout:sharedObject.timeout,
@@ -120,8 +118,8 @@ let vm = new Vue({
             }).done(function (res) {
                 if(res == null || res == []){
                     modelData.scrollEnd = true
-                    modelData.pageNo--
                 } else {
+                    modelData.messages = []
                     modelData.messages = res.reverse()
                 }
                 vm.$nextTick(function(){
@@ -130,9 +128,6 @@ let vm = new Vue({
             })
         },
         showHistoryMessage: function (conversation) {
-            this.chatPerson.destId = conversation.destId;
-            this.chatPerson.imgUrl = conversation.imgUrl;
-            this.chatPerson.nickname = conversation.nickname;
             let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-1'
             $.get({
                 url: sharedObject.url+path,
@@ -141,7 +136,6 @@ let vm = new Vue({
             }).done(function (res) {
                 if(res == null || res == []){
                     modelData.scrollEnd = true
-                    modelData.pageNo--
                 } else {
                     modelData.messages = (res.reverse()).concat(modelData.messages.reverse())
                 }
