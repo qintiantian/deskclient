@@ -17,20 +17,13 @@ const modelData = {
         'nickname':'',
         'imgUrl':''
     },
-    conversations: [
-        {
-            'msgId':'',
-            'destId':'',
-            'nickname':'',
-            'username':'',
-            'lastDate':'',
-            'lastMsg':'',
-            'isActive': false
-        }
-    ],
+    conversations: [],
     messages: [],
     pageSize: 30,
-    scrollEnd: false
+    scrollEnd: false,
+    destId2Message: {
+
+    }
 };
 
 let header = {
@@ -47,7 +40,7 @@ let vm = new Vue({
     methods: {
         scrollEvent: function(event) {
             if(event.srcElement.scrollTop <= 10 && !modelData.scrollEnd){
-                let conversation = {destId: this.chatPerson.destId, msgId: modelData.messages[0].msgId}
+                let conversation = {'destId': this.chatPerson.destId, 'msgId': modelData.messages[0].msgId}
                 this.showHistoryMessage(conversation);
             }
         },
@@ -99,33 +92,40 @@ let vm = new Vue({
                 headers:header
             }).done(function (res) {
                 modelData.conversations = res;
-                modelData.conversations[0].isActive = true;
                 vm.$nextTick(function(){
                     this.showHistoryMessageByClick(modelData.conversations[0])
                 })
+                for(let i in res) {
+                    let c = res[i]
+                    modelData.destId2Message[c.destId] = []
+                }
             })
         },
         showHistoryMessageByClick: function (conversation) {
-            $(".conversations li").removeClass('active')
             this.chatPerson.destId = conversation.destId;
             this.chatPerson.imgUrl = conversation.imgUrl;
             this.chatPerson.nickname = conversation.nickname;
-            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-2'
-            $.get({
-                url: sharedObject.url+path,
-                timeout:sharedObject.timeout,
-                headers:header
-            }).done(function (res) {
-                if(res == null || res == []){
-                    modelData.scrollEnd = true
-                } else {
-                    modelData.messages = []
-                    modelData.messages = res.reverse()
-                }
-                vm.$nextTick(function(){
-                    $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
+            if(modelData.destId2Message[conversation.destId].length == 0) {
+                let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-2'
+                $.get({
+                    url: sharedObject.url+path,
+                    timeout:sharedObject.timeout,
+                    headers:header
+                }).done(function (res) {
+                    if(res == null || res == []){
+                        modelData.scrollEnd = true
+                    } else {
+                        modelData.messages = modelData.destId2Message[conversation.destId] = res.reverse()
+                    }
                 })
+            }
+            else {
+                modelData.messages = this.destId2Message[conversation.destId]
+            }
+            vm.$nextTick(function(){
+                $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
             })
+
         },
         showHistoryMessage: function (conversation) {
             let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-1'
@@ -137,8 +137,10 @@ let vm = new Vue({
                 if(res == null || res == []){
                     modelData.scrollEnd = true
                 } else {
-                    modelData.messages = (res.reverse()).concat(modelData.messages.reverse())
+                    let r = res.reverse()
+                    modelData.destId2Message[conversation.destId] = r.concat(modelData.destId2Message[conversation.destId])
                 }
+                modelData.messages =  modelData.destId2Message[conversation.destId]
             })
         },
         init:function () {
