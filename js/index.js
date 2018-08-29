@@ -162,12 +162,14 @@ client.on('data', function (bytes) {
     let chat = response.getChat()
     let decoder = new TextDecoder('utf8')
     let m = {
-        "userId": chat.getUserid(),
+        "sendId": chat.getUserid(),
         "destId": chat.getDestid(),
         "content": decoder.decode(chat.getContent_asU8()),
-        "createtime": chat.getTs()
+        "createtime": chat.getTs(),
+        "msgId": chat.getMsgid()
     }
-    modelData.messages.push(m)
+    modelData.destId2Message[m.destId].push(m)
+    // modelData.messages.push(m)
     vm.scrollToEnd()
     ipcRenderer.send('flash')
 
