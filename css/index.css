@@ -73,7 +73,7 @@
     color:#000000;
 }
 .last-date{
-    color: #B9B9B9;
+    color: #999999;
     float:right;
     font-size:0.7em;
 }
@@ -82,7 +82,7 @@
     font-size: 0.7em;
 }
 .conversations li{
-    padding:10px 6px 6px 6px;
+    padding:5px;
     height: 50px;
     position: relative;
 }

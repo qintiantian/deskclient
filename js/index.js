@@ -92,13 +92,13 @@ let vm = new Vue({
                 headers:header
             }).done(function (res) {
                 modelData.conversations = res;
-                vm.$nextTick(function(){
-                    this.showHistoryMessageByClick(modelData.conversations[0])
-                })
                 for(let i in res) {
                     let c = res[i]
                     modelData.destId2Message[c.destId] = []
                 }
+                vm.$nextTick(function(){
+                    this.showHistoryMessageByClick(modelData.conversations[0])
+                })
             })
         },
         showHistoryMessageByClick: function (conversation) {
@@ -117,14 +117,13 @@ let vm = new Vue({
                     } else {
                         modelData.messages = modelData.destId2Message[conversation.destId] = res.reverse()
                     }
+                    vm.scrollToEnd()
                 })
             }
             else {
                 modelData.messages = this.destId2Message[conversation.destId]
             }
-            vm.$nextTick(function(){
-                $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
-            })
+            vm.scrollToEnd()
 
         },
         showHistoryMessage: function (conversation) {
@@ -141,6 +140,11 @@ let vm = new Vue({
                     modelData.destId2Message[conversation.destId] = r.concat(modelData.destId2Message[conversation.destId])
                 }
                 modelData.messages =  modelData.destId2Message[conversation.destId]
+            })
+        },
+        scrollToEnd:function(){
+            vm.$nextTick(function(){
+                $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
             })
         },
         init:function () {
@@ -165,6 +169,7 @@ client.on('data', function (bytes) {
     }
     modelData.messages.push(m)
     ipcRenderer.send('flash')
+    vm.scrollToEnd()
 
 })
 client.on('close', function () {
