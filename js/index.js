@@ -2,7 +2,7 @@ const Vue = require('./js/vue')
 const messages = require("./js/message_pb")
 const $ = require('jquery')
 const uuid = require('uuid')
-const remote = require('electron').remote
+const {ipcRenderer, remote} = require('electron')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -162,6 +162,7 @@ client.on('data', function (bytes) {
         "createtime": chat.getTs()
     }
     modelData.messages.push(m)
+    ipcRenderer.send('flash')
 
 })
 client.on('close', function () {

@@ -1,4 +1,5 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, Tray, Menu} = require('electron')
+const path = require('path')
 const net =  require('net')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -15,6 +16,13 @@ ipcMain.on('index-show', function () {
         win[1] = null
     })
      win[0].close()
+    // 开始或停止显示窗口来获得用户的关注
+    indexWin.flashFrame(true);
+})
+ipcMain.on('flash', function () {
+    let indexWin = win[1]
+    indexWin.showInactive();
+    indexWin.flashFrame(true);
 })
 
 function createWindow () {
