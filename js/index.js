@@ -168,8 +168,8 @@ client.on('data', function (bytes) {
         "createtime": chat.getTs()
     }
     modelData.messages.push(m)
-    ipcRenderer.send('flash')
     vm.scrollToEnd()
+    ipcRenderer.send('flash')
 
 })
 client.on('close', function () {
