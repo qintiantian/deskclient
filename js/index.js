@@ -95,11 +95,11 @@ let vm = new Vue({
                 headers:header
             }).done(function (res) {
                 modelData.conversations = res;
-                for(let i in res) {
-                    let c = res[i]
-                    modelData.destId2Message[c.destId] = []
-                }
                 if(!modelData.is_fresh) {
+                    for(let i in res) {
+                        let c = res[i]
+                        modelData.destId2Message[c.destId] = []
+                    }
                     vm.$nextTick(function(){
                         this.showHistoryMessageByClick(modelData.conversations[0])
                     })
@@ -176,7 +176,6 @@ client.on('data', function (bytes) {
         "msgId": chat.getMsgid()
     }
     modelData.destId2Message[m.sendId].push(m)
-    // modelData.messages.push(m)
     vm.scrollToEnd()
     ipcRenderer.send('flash')
     vm.getConversations()
