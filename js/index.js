@@ -19,13 +19,18 @@ const modelData = {
     },
     conversations: [
         {
+            'msgId':'',
+            'destId':'',
             'nickname':'',
+            'username':'',
             'lastDate':'',
             'lastMsg':'',
             'isActive': false
         }
     ],
-    messages: []
+    messages: [],
+    pageSize: 30,
+    scrollEnd: false
 };
 
 let header = {
@@ -36,14 +41,17 @@ let header = {
 let vm = new Vue({
     el: '#app',
     data: modelData,
-    watch: {
-        messages:function(){
-            this.$nextTick(function(){
-                $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
-            })
-        }
+    created(){
+        this.init();
     },
     methods: {
+        scrollEvent: function(event) {
+            if(event.srcElement.scrollTop == 0 && !modelData.scrollEnd){
+                let conversation = {destId: this.chatPerson.destId, msgId: modelData.pageNo+1}
+                modelData.pageNo++
+                this.showHistoryMessage(conversation);
+            }
+        },
         sendMsg: function (event) {
             let content = $('.content').val()
             let message = new messages.ProtocolMessage()
@@ -92,23 +100,55 @@ let vm = new Vue({
                 headers:header
             }).done(function (res) {
                 modelData.conversations = res;
+                modelData.conversations[0].isActive = true;
+                vm.$nextTick(function(){
+                    this.showHistoryMessageByClick(modelData.conversations[0])
+                })
             })
         },
-        showHistoryMessage: function (conversation) {
+        showHistoryMessageByClick: function (conversation) {
             $(".conversations li").removeClass('active')
-            conversation.isActive = true;
-            this.chatPerson = conversation
-            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId
+            console.info(conversation)
+            this.chatPerson.destId = conversation.destId;
+            this.chatPerson.imgUrl = conversation.imgUrl;
+            this.chatPerson.nickname = conversation.nickname;
+            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-1'
             $.get({
                 url: sharedObject.url+path,
                 timeout:sharedObject.timeout,
                 headers:header
             }).done(function (res) {
-                modelData.messages = []
-                modelData.messages = res
+                if(res == null || res == []){
+                    modelData.scrollEnd = true
+                    modelData.pageNo--
+                } else {
+                    modelData.messages = res.reverse()
+                }
+                vm.$nextTick(function(){
+                    $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
+                })
+            })
+        },
+        showHistoryMessage: function (conversation) {
+            this.chatPerson.destId = conversation.destId;
+            this.chatPerson.imgUrl = conversation.imgUrl;
+            this.chatPerson.nickname = conversation.nickname;
+            let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-1'
+            $.get({
+                url: sharedObject.url+path,
+                timeout:sharedObject.timeout,
+                headers:header
+            }).done(function (res) {
+                if(res == null || res == []){
+                    modelData.scrollEnd = true
+                    modelData.pageNo--
+                } else {
+                    modelData.messages = (res.reverse()).concat(modelData.messages.reverse())
+                }
             })
         },
         init:function () {
+            console.info("init")
             this.getUserProfile()
             this.getConversations()
         }
@@ -133,11 +173,6 @@ client.on('data', function (bytes) {
 client.on('close', function () {
     console.log("connection closed")
 })
-
-vm.init()
-
-
-
 
 
 
