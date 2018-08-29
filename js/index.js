@@ -23,7 +23,8 @@ const modelData = {
     scrollEnd: false,
     destId2Message: {
 
-    }
+    },
+    is_fresh: false
 };
 
 let header = {
@@ -69,6 +70,8 @@ let vm = new Vue({
                 "createtime": new Date()
             }
             modelData.messages.push(m)
+            this.getConversations()
+            this.scrollToEnd()
         },
         getUserProfile: function () {
             let path = '/user/profile/' + sharedObject.userId + '/' + sharedObject.certificate
@@ -96,9 +99,13 @@ let vm = new Vue({
                     let c = res[i]
                     modelData.destId2Message[c.destId] = []
                 }
-                vm.$nextTick(function(){
-                    this.showHistoryMessageByClick(modelData.conversations[0])
-                })
+                if(!modelData.is_fresh) {
+                    vm.$nextTick(function(){
+                        this.showHistoryMessageByClick(modelData.conversations[0])
+                    })
+                    modelData.is_fresh = true
+                }
+
             })
         },
         showHistoryMessageByClick: function (conversation) {
@@ -148,9 +155,9 @@ let vm = new Vue({
             })
         },
         init:function () {
-            console.info("init")
             this.getUserProfile()
             this.getConversations()
+
         }
     }
 })
@@ -168,10 +175,11 @@ client.on('data', function (bytes) {
         "createtime": chat.getTs(),
         "msgId": chat.getMsgid()
     }
-    modelData.destId2Message[m.destId].push(m)
+    modelData.destId2Message[m.sendId].push(m)
     // modelData.messages.push(m)
     vm.scrollToEnd()
     ipcRenderer.send('flash')
+    vm.getConversations()
 
 })
 client.on('close', function () {
