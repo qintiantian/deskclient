@@ -24,6 +24,9 @@ const modelData = {
     destId2Message: {
 
     },
+    unReadMsgCnt: {
+
+    },
     is_fresh: false
 };
 
@@ -105,7 +108,6 @@ let vm = new Vue({
                     })
                     modelData.is_fresh = true
                 }
-
             })
         },
         showHistoryMessageByClick: function (conversation) {
@@ -131,7 +133,7 @@ let vm = new Vue({
                 modelData.messages = this.destId2Message[conversation.destId]
             }
             vm.scrollToEnd()
-
+            modelData.unReadMsgCnt[conversation.destId]=0
         },
         showHistoryMessage: function (conversation) {
             let path = '/user/historymessage/'+sharedObject.userId+'/'+conversation.destId+'/'+conversation.msgId+'/'+modelData.pageSize+'?'+'direct=-1'
@@ -153,6 +155,23 @@ let vm = new Vue({
             vm.$nextTick(function(){
                 $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
             })
+        },
+        unReadMsgCount: function(sendId){
+            for(let i in modelData.conversations){
+                let c = modelData.conversations[i];
+                if(c.destId == sendId && sendId != modelData.chatPerson.destId){
+                    let unReadMsgCnt = modelData.unReadMsgCnt[sendId]
+                    if(unReadMsgCnt == undefined || unReadMsgCnt == null){
+                        modelData.unReadMsgCnt[sendId] = 1
+                    }else {
+                        if(modelData.unReadMsgCnt[sendId] < 3 && modelData.unReadMsgCnt[sendId] != '99+'){
+                            modelData.unReadMsgCnt[sendId]++
+                        }else{
+                            modelData.unReadMsgCnt[sendId] = '99+'
+                        }
+                    }
+                }
+            }
         },
         flash:function(){
             let curWin = remote.getCurrentWindow()
@@ -183,6 +202,7 @@ client.on('data', function (bytes) {
     modelData.destId2Message[m.sendId].push(m)
     vm.scrollToEnd()
  	vm.getConversations()
+    vm.unReadMsgCount(m.sendId)
     vm.flash()
 
 })
@@ -195,8 +215,8 @@ $(function(){
 });
 window.onresize=function () {
     $(".left, .median, .right").height($(window).height());
-    $(".right").width($(window).width()-leftWidth-median);
-    $(".chat-area").height($(window).height()-topHeight-bottomHeight)
+    $(".right").width($(window).width()-leftWidth-median-1);
+    $(".chat-area").height($(window).height()-topHeight-bottomHeight-1)
 }
 
 

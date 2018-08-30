@@ -93,6 +93,24 @@
 .conversations li img{
     width:40px;
 }
+.conversations li .badge{
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    background-color: red;
+    color: #FFF;
+    font-size: 8px;
+    border-radius: 50%;
+    bottom: 50px;
+    left: 32px;
+    position: absolute;
+    z-index: 1000;
+    display: inline!important;
+}
+.conversations li .hidden{
+    display: none;
+}
 .conversations li.active{
     background-color: #BCBDBE;
 }

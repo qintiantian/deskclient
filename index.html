@@ -50,7 +50,12 @@
                     <div v-on:click="showHistoryMessageByClick(conversation)">
                         <input type="hidden" value="{{conversation.destId}}">
                         <input type="hidden" value="{{conversation.msgId}}">
-                        <span><img v-bind:src="conversation.imgUrl"></span>
+                        <span>
+                            <img v-bind:src="conversation.imgUrl">
+                            <div style="display: none;" v-bind:class="{badge: conversation.destId!=chatPerson.destId && (unReadMsgCnt[conversation.destId]>0 || unReadMsgCnt[conversation.destId]=='99+')}">
+                                {{unReadMsgCnt[conversation.destId]}}
+                            </div>
+                        </span>
                         <span>
                             <span class="nickname">{{conversation.nickname}}</span>
                             <span class="last-date">{{conversation.lastDate}}</span>
