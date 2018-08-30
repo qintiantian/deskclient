@@ -9,6 +9,8 @@ let win=[]
 ipcMain.on('index-show', function () {
     win[1] = new BrowserWindow({width:850, height: 600, autoHideMenuBar: true, backgroundColor:'#F5F5F5'})
     let indexWin = win[1]
+    indexWin.setMinimumSize(720,500)
+    indexWin.setTitle('')
     indexWin.loadFile('index.html')
     indexWin.webContents.openDevTools()
     indexWin.on('closed', () => {
@@ -16,13 +18,6 @@ ipcMain.on('index-show', function () {
         win[1] = null
     })
      win[0].close()
-    // 开始或停止显示窗口来获得用户的关注
-    indexWin.flashFrame(true);
-})
-ipcMain.on('flash', function () {
-    let indexWin = win[1]
-    indexWin.showInactive();
-    indexWin.flashFrame(true);
 })
 
 function createWindow () {

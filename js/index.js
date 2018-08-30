@@ -154,6 +154,11 @@ let vm = new Vue({
                 $('.chat-area')[0].scrollTop=$('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
             })
         },
+        flash:function(){
+            let curWin = remote.getCurrentWindow()
+            curWin.showInactive();
+            curWin.flashFrame(true);
+        },
         init:function () {
             this.getUserProfile()
             this.getConversations()
@@ -177,13 +182,22 @@ client.on('data', function (bytes) {
     }
     modelData.destId2Message[m.sendId].push(m)
     vm.scrollToEnd()
-    ipcRenderer.send('flash')
-    vm.getConversations()
+ 	vm.getConversations()
+    vm.flash()
 
 })
 client.on('close', function () {
     console.log("connection closed")
 })
+let leftWidth=60, median=252, topHeight=60, bottomHeight=130
+$(function(){
+    $(".left, .median, .right").height($(window).height());
+});
+window.onresize=function () {
+    $(".left, .median, .right").height($(window).height());
+    $(".right").width($(window).width()-leftWidth-median);
+    $(".chat-area").height($(window).height()-topHeight-bottomHeight)
+}
 
 
 
