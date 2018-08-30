@@ -164,7 +164,7 @@ let vm = new Vue({
                     if(unReadMsgCnt == undefined || unReadMsgCnt == null){
                         modelData.unReadMsgCnt[sendId] = 1
                     }else {
-                        if(modelData.unReadMsgCnt[sendId] < 3 && modelData.unReadMsgCnt[sendId] != '99+'){
+                        if(modelData.unReadMsgCnt[sendId] < 99 && modelData.unReadMsgCnt[sendId] != '99+'){
                             modelData.unReadMsgCnt[sendId]++
                         }else{
                             modelData.unReadMsgCnt[sendId] = '99+'
@@ -211,10 +211,10 @@ client.on('close', function () {
 })
 let leftWidth=60, median=252, topHeight=60, bottomHeight=130
 $(function(){
-    $(".left, .median, .right").height($(window).height());
+    $(".left, .median, .right").height($(window).height()-1);
 });
 window.onresize=function () {
-    $(".left, .median, .right").height($(window).height());
+    $(".left, .median, .right").height($(window).height()-1);
     $(".right").width($(window).width()-leftWidth-median-1);
     $(".chat-area").height($(window).height()-topHeight-bottomHeight-1)
 }
