@@ -191,6 +191,16 @@ client.on('data', function (bytes) {
     let message = messages.ProtocolMessage.deserializeBinary(bytes)
     console.log(message)
     let response = message.getResponse()
+    if(response.getResptype() == messages.ProtocolMessage.RequestType.LOGIN){
+        let resp = response.getResp();
+        if (resp.getCode()== 200) {
+            sharedObject.userId = resp.getUserid()
+            sharedObject.certificate = resp.getCertificate()
+            sharedObject.username = modelData.userId
+            sharedObject.pwd = modelData.pwd
+        }
+        return
+    }
     let chat = response.getChat()
     let decoder = new TextDecoder('utf8')
     let m = {
@@ -207,8 +217,29 @@ client.on('data', function (bytes) {
     vm.flash()
 
 })
+let reconnet_count = 3
 client.on('close', function () {
+    reconnet_count--
+    if(reconnet_count <= 0)
+        return
     console.log("connection closed")
+    client.connect(sharedObject.tcpport, sharedObject.host,function () {
+        console.log("断线后重连")
+        let message = new messages.ProtocolMessage()
+        let req = new messages.ProtocolMessage.TRequest()
+        req.setReqtype(messages.ProtocolMessage.RequestType.LOGIN)
+        let clogin = new messages.CLogin()
+        clogin.setMsgid(uuid.v1())
+        clogin.setUserid(sharedObject.username)
+        clogin.setPwd(sharedObject.pwd)
+        clogin.setDevicetype(messages.CLogin.DeviceType.WINDOWS)
+        clogin.setTs(new Date().getTime())
+        clogin.setVersion(1)
+        req.setLogin(clogin)
+        message.setRequest(req)
+        let bytes = message.serializeBinary()
+        client.write(Buffer.from(bytes))
+    })
 })
 let leftWidth=60, median=252, topHeight=60, bottomHeight=130
 $(function(){

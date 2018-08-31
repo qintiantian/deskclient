@@ -45,6 +45,8 @@ client.on("data", function (bytes) {
     if (resp.getCode()== 200) {
         sharedObject.userId = resp.getUserid()
         sharedObject.certificate = resp.getCertificate()
+        sharedObject.username = modelData.userId
+        sharedObject.pwd = modelData.pwd
         ipcRenderer.send('index-show')
     }
     else {
