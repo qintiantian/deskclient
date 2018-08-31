@@ -46,8 +46,8 @@
         </div>
         <div class="conversations">
             <ul>
-                <li v-for="(conversation) in conversations"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
-                    <div v-on:click="showHistoryMessageByClick(conversation)">
+                <li v-for="(conversation) in conversations" v-on:click="showHistoryMessageByClick(conversation)"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
+                    <div >
                         <input type="hidden" value="{{conversation.destId}}">
                         <input type="hidden" value="{{conversation.msgId}}">
                         <span>
@@ -89,7 +89,7 @@
         <div class="send-area">
             <div class=""></div>
             <div class="content-area">
-                <textarea rows="4" class="content" v-on:keyup.enter="sendMsg"></textarea>
+                <textarea rows="4" class="content" v-on:keydown.enter="sendMsg"></textarea>
             </div>
             <div class="">
                 <button v-on:click="sendMsg" class="send-btn"><span>发送(S)</span></button>

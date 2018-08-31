@@ -49,6 +49,7 @@ let vm = new Vue({
             }
         },
         sendMsg: function (event) {
+            event.preventDefault()
             let content = $('.content').val()
             let message = new messages.ProtocolMessage()
             let req = new messages.ProtocolMessage.TRequest()
