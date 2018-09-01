@@ -16,56 +16,8 @@
 ::-webkit-scrollbar-thumb:window-inactive {
     /*background:rgba(255,0,0,0.4);*/
 }
-
-.container{
-    width: 100%;
-
-}
-.left{
-    width: 60px;
-    text-align: center;
-    position:relative;
-    background: rgb(40, 40, 41) linear-gradient(#2B2B2B, #1F1F1F);
-}
-.left ul li{
-    margin-top:20px;
-}
-.left ul li:hover{
-    cursor: pointer;
-}
-.left ul li img{
-    width:29px;
-}
-#profile{
-    width: 35px;
-}
-#settings{
-    position: absolute;
-    left:10px;
-    bottom: 10px;
-}
-.median{
-    width: 252px;
-    background: #EEEAE8 linear-gradient(#EEEBE9, #EDEAE8);
-}
-.right{
-    width: 515px;
-    min-width: 300px;
-    background-color: #F5F5F5;
-    position: relative;
-}
-.separator{
-    width:100%;
-    position: absolute;
-    top:50px;
-    border-bottom:solid 1px #e7e7e7;
-}
 .chat-person,.chat-area, .send-area{
     padding:0 20px;
-}
-.left, .median, .right{
-    float: left;
-    height: 553px;
 }
 .nickname{
     position: absolute;
@@ -126,25 +78,6 @@
 }
 .conversations li.active{
     background-color: #BCBDBE;
-}
-.search{
-    padding:20px 6px 6px 8px;
-    position: relative;
-}
-.search i{
-    width:200px;
-    position: absolute;
-    left: 15px;
-    top: 24px;
-    color:#636363;
-    font-size:12px;
-}
-#search-input{
-    background-color:#DBD9D8;
-    border-radius: 8px;
-    border:1px solid #DBDBDB;
-    height: 20px;
-    padding:2px;
 }
 .chat-person{
     font-size: 1.2em;

@@ -35,6 +35,7 @@ let header = {
     'certificate': sharedObject.certificate
 }
 
+
 let vm = new Vue({
     el: '#app',
     data: modelData,

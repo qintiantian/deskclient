@@ -8,3 +8,71 @@ li{
 input,select,option,textarea,button{
     outline:none;
 }
+
+.container{
+    width: 100%;
+
+}
+.left{
+    width: 60px;
+    background-color: rgb(40,40,41);
+    text-align: center;
+    position:relative;
+}
+.left ul li{
+    margin-top:20px;
+}
+.left ul li:hover{
+    cursor: pointer;
+}
+.left ul li img{
+    width:29px;
+}
+#profile{
+    width: 35px;
+}
+#settings{
+    position: absolute;
+    left:10px;
+    bottom: 10px;
+}
+.median{
+    width: 252px;
+    background-color: #EEEAE8;
+}
+.right{
+    width: 515px;
+    min-width: 300px;
+    background-color: #F5F5F5;
+    position: relative;
+}
+.separator{
+    width:100%;
+    position: absolute;
+    top:50px;
+    border-bottom:solid 1px #e7e7e7;
+}
+
+.left, .median, .right{
+    float: left;
+    height: 553px;
+}
+.search{
+    padding:20px 6px 6px 8px;
+    position: relative;
+}
+.search i{
+    width:200px;
+    position: absolute;
+    left: 15px;
+    top: 24px;
+    color:#636363;
+    font-size:12px;
+}
+#search-input{
+    background-color:#DBD9D8;
+    border-radius: 8px;
+    border:1px solid #DBDBDB;
+    height: 20px;
+    padding:2px;
+}

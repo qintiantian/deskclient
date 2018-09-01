@@ -58,8 +58,8 @@ app.on('activate', () => {
     }
 })
 
-// let host='39.106.133.40'
-let host='localhost'
+let host='39.106.133.40'
+// let host='localhost'
 let tcpport='8090'
 let client = new net.Socket()
 client.connect(tcpport, host, function () {
@@ -70,7 +70,7 @@ global.sharedObject = {
     client: client,
     userId:'',
     certificate:'',
-    url:'http://'+host+':8080/ims',
+    url:'http://'+host+'/ims',
     host:host,
     tcpport:tcpport,
     timeout:10000,

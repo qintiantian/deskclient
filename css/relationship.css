@@ -1,0 +1,101 @@
+.relationships li{
+    height: 50px;
+    line-height: 50px;
+}
+.relationships li span{
+    font-size: 14px;
+    font-weight: 400;
+
+}
+.relationships li b{
+    margin-left: 10px;
+}
+.relationships .arrow-border {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 10px;
+    border-top: 1px solid #BEBEBE;
+    border-right: 1px solid #BEBEBE;
+}
+.relationships .arrow-right {
+    transform: rotate(45deg);
+}
+.relationships .arrow-left {
+    transform: rotate(-135deg);
+}
+.relationships .fri-num {
+    float: right;
+    margin-right: 15px;
+    color: #BEBEBE;
+}
+.rel-list{
+    margin-left: 30px;
+}
+.rel-list p {
+    font-size: 12px;
+    color: #BEBEBE;
+}
+.rel-list hr{
+    height: 1px;
+    border: none;
+    border-top: 1px solid #D3D3D3;
+}
+.rel-list li{
+    height: 50px;
+    line-height: 50px;
+}
+.rel-list img {
+    width: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.rel-list li span {
+    font-size: 14px;
+    font-weight: 400;
+
+}
+.rel-detail{
+    width: 60%;
+    margin-top: 60px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.rel-detail .rel-title{
+    height: 80px;
+}
+.rel-detail .rel-title span{
+    vertical-align:text-top;
+    font-size: 25px;
+}
+.rel-detail img{
+    width: 80px;
+    display: inline;
+    float: right;
+}
+.rel-detail hr{
+    height: 1px;
+    border: none;
+    border-top: 1px solid #D3D3D3;
+    margin: 20px auto
+}
+.rel-detail .rel-content li{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px
+}
+.rel-detail .title{
+    color: #BEBEBE;
+}
+.rel-detail .msg{
+    margin-left: 30px;
+}
+.rel-detail button{
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+    color: #FFFFFF;
+    background-color: #1AAD19;
+    margin: 50px auto;
+    display: block;
+}
