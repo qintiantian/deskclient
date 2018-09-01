@@ -1,23 +1,29 @@
 const V = require('./js/vue')
-
 V.component('nav-left',{
+    props:['user'],
+    data: function () {
+        return {
+            imgUrl1: "imgs/p1.png",
+            imgUrl2: "imgs/p2-1.png"
+        }
+    },
     template:
-        `
-             <div class="left">
+            `
+             <div class="left" id="nav-left">
                 <ul>
                     <li>
                        <a>
-                            <img id="profile" v-bind:src="vm.user.imgUrl">
+                            <img id="profile" v-bind:src="user.imgUrl">
                         </a>
                     </li>
                     <li>
-                        <a href="index.html">
-                            <img src="imgs/p1.png">
+                        <a @click="router(true, false)">
+                            <img v-bind:src="imgUrl1">
                         </a>
                     </li>
                     <li>
-                        <a href="relationship.html">
-                            <img src="imgs/p2.png">
+                        <a @click="router(false, true)">
+                            <img v-bind:src="imgUrl2">
                         </a>
                     </li>
                     <li>
@@ -33,5 +39,28 @@ V.component('nav-left',{
                 </ul>
             </div>
                 `
+    ,
+    methods:{
+        router: function(s1, s2){
+            if(s1){
+                this.imgUrl1 = "imgs/p1.png"
+                this.imgUrl2 = "imgs/p2-1.png";
+            }
+            if(s2){
+                this.imgUrl1 = "imgs/p1-1.png";
+                this.imgUrl2 = "imgs/p2.png"
+            }
+            let data = {
+                isShow : s1,
+                isShow2: s2
+            }
+            this.$emit('change', data)
+        }
+    }
 })
+
+new V({
+    el:"#nav-left"
+})
+
 

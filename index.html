@@ -10,13 +10,13 @@
 </head>
 <body>
 <div id="app" class="container">
-    <nav-left></nav-left>
-    <div class="median">
+    <nav-left v-bind:user="user" v-bind:isShow="isShow" v-bind:isShow2="isShow2" v-on:change="updateShow"></nav-left>
+    <div class="median" id="median">
         <div class="search">
             <i class="fa fa-search"></i>
             <input class="" id="search-input" type="text" placeholder=""/>
         </div>
-        <div class="conversations">
+        <div class="conversations" v-show="isShow">
             <ul>
                 <li v-for="(conversation) in conversations" v-on:click="showHistoryMessageByClick(conversation)"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
                     <div >
@@ -37,35 +37,72 @@
                 </li>
             </ul>
         </div>
+        <div class="relationships" v-show="isShow2">
+            <ul>
+                <li><b class="arrow-border arrow-right"></b><span>新的朋友</span><span class="fri-num">22</span></li>
+                <li><b class="arrow-border arrow-right"></b><span>联系人</span></li>
+            </ul>
+            <div class="rel-list">
+                <p>A</p>
+                <hr>
+                <ul>
+                    <li><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
+                    <li><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
+                </ul>
+                <p>B</p>
+                <hr>
+                <ul>
+                    <li><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                    <li><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div class="right">
-        <div class="separator"></div>
-        <div class="chat-person">
-            <span>{{chatPerson.nickname}}</span>
-        </div>
-        <div class="chat-area" id="chat-area" @scroll="scrollEvent">
-            <ul>
-                <li v-for="message in messages">
-                    <div v-if="message.sendId==user.userId">
-                        <a class="myself"><img v-bind:src="user.imgUrl"></a>
-                        <span class="myself">{{message.content}}</span>
-                    </div>
-                    <div v-else>
-                        <a class="other-person"><img v-bind:src="chatPerson.imgUrl"></a>
-                        <span class="other-person">{{message.content}}</span>
-                    </div>
-                    <div class="clear"></div>
-                </li>
-            </ul>
-        </div>
-        <div class="send-area">
-            <div class=""></div>
-            <div class="content-area">
-                <textarea rows="4" class="content" v-on:keydown.enter="sendMsg"></textarea>
+        <div v-show="isShow">
+            <div class="separator"></div>
+            <div class="chat-person">
+                <span>{{chatPerson.nickname}}</span>
             </div>
-            <div class="">
-                <button v-on:click="sendMsg" class="send-btn"><span>发送(S)</span></button>
+            <div class="chat-area" id="chat-area" @scroll="scrollEvent">
+                <ul>
+                    <li v-for="message in messages">
+                        <div v-if="message.sendId==user.userId">
+                            <a class="myself"><img v-bind:src="user.imgUrl"></a>
+                            <span class="myself">{{message.content}}</span>
+                        </div>
+                        <div v-else>
+                            <a class="other-person"><img v-bind:src="chatPerson.imgUrl"></a>
+                            <span class="other-person">{{message.content}}</span>
+                        </div>
+                        <div class="clear"></div>
+                    </li>
+                </ul>
             </div>
+            <div class="send-area">
+                <div class=""></div>
+                <div class="content-area">
+                    <textarea rows="4" class="content" v-on:keydown.enter="sendMsg"></textarea>
+                </div>
+                <div class="">
+                    <button v-on:click="sendMsg" class="send-btn"><span>发送(S)</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="rel-detail" v-show="isShow2">
+            <div class="rel-title">
+                <span class="name">孔令凯</span>
+                <img src="imgs/konglk.jpg">
+            </div>
+            <hr>
+            <div class="rel-content">
+                <ul>
+                    <li><span class="title">备注名</span><span class="msg">孔令凯</span></li>
+                    <li><span class="title">微信名</span><span class="msg">孔令凯</span></li>
+                    <li><span class="title">来  源</span><span class="msg">孔令凯</span></li>
+                </ul>
+            </div>
+            <button>发消息</button>
         </div>
     </div>
 </div>

@@ -27,7 +27,9 @@ const modelData = {
     unReadMsgCnt: {
 
     },
-    is_fresh: false
+    is_fresh: false,
+    isShow: true,
+    isShow2: false
 };
 
 let header = {
@@ -174,6 +176,10 @@ let vm = new Vue({
                     }
                 }
             }
+        },
+        updateShow: function(data){
+            this.isShow = data.isShow;
+            this.isShow2 = data.isShow2;
         },
         flash:function(){
             let curWin = remote.getCurrentWindow()
