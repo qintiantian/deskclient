@@ -28,8 +28,11 @@ const modelData = {
 
     },
     is_fresh: false,
-    isShow: true,
-    isShow2: false
+    isShow: true,//会话列表展示
+    isShow2: false,//好友列表展示
+    isOpen: false,//联系人列表展示
+    isOpenDetail: false,//联系人详细信息展示
+    isFloat: false//用户详情展示
 };
 
 let header = {
@@ -177,14 +180,33 @@ let vm = new Vue({
                 }
             }
         },
-        updateShow: function(data){
-            this.isShow = data.isShow;
-            this.isShow2 = data.isShow2;
-        },
         flash:function(){
             let curWin = remote.getCurrentWindow()
             curWin.showInactive();
             curWin.flashFrame(true);
+        },
+        updateShow: function(data){
+            this.isShow = data.isShow;
+            this.isShow2 = data.isShow2;
+            this.isOpen = false;//关闭联系人列表
+            this.isOpenDetail = false;//关闭联系人详情
+        },
+        openContact: function(data){
+            this.isOpen = !data;
+        },
+        openDetail: function(){
+            this.isOpenDetail = true
+        },
+        sendMsgFromRelationship: function(){
+            let d = {
+                isShow: true,
+                isShow2: false
+            }
+            this.updateShow(d)
+            //TODO 会话列表第一条展示当前好友会话
+        },
+        showUserDtl: function(data){
+            this.isFloat = data
         },
         init:function () {
             this.getUserProfile()

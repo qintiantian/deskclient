@@ -10,12 +10,32 @@
 </head>
 <body>
 <div id="app" class="container">
-    <nav-left v-bind:user="user" v-bind:isShow="isShow" v-bind:isShow2="isShow2" v-on:change="updateShow"></nav-left>
+    <!--左侧导航-->
+    <nav-left v-bind:user="user" v-bind:isfloat="isFloat" v-bind:isShow="isShow" v-bind:isShow2="isShow2" v-on:change-show="updateShow" v-on:show-user="showUserDtl"></nav-left>
+    <div class="bomb-box" v-show="isFloat">
+        <div class="bomb-box-content">
+            <div>
+                <span class="name">{{ user.nickname }}</span>
+                <img class="imgUrl" :src="user.imgUrl">
+                <p class="wx">微信号：<b>{{ user.userId }}</b></p>
+            </div>
+            <hr>
+            <div>
+                <span class="wx">地&nbsp;&nbsp;&nbsp;区</span>
+                <span class="address">湖北 武汉</span>
+            </div>
+            <div class="icon">
+                <img class="share" src="imgs/share.png">
+                <img class="msg" src="imgs/msg.png">
+            </div>
+        </div>
+    </div>
     <div class="median" id="median">
         <div class="search">
             <i class="fa fa-search"></i>
             <input class="" id="search-input" type="text" placeholder=""/>
         </div>
+        <!--会话列表-->
         <div class="conversations" v-show="isShow">
             <ul>
                 <li v-for="(conversation) in conversations" v-on:click="showHistoryMessageByClick(conversation)"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
@@ -37,28 +57,37 @@
                 </li>
             </ul>
         </div>
+        <!--好友列表-->
         <div class="relationships" v-show="isShow2">
             <ul>
-                <li><b class="arrow-border arrow-right"></b><span>新的朋友</span><span class="fri-num">22</span></li>
-                <li><b class="arrow-border arrow-right"></b><span>联系人</span></li>
+                <li>
+                    <b class="arrow-border arrow-right"></b>
+                    <span>新的朋友</span>
+                </li>
+                <li @click="openContact(isOpen)">
+                    <b class="arrow-border" v-bind:class="isOpen? 'arrow-down':'arrow-right'"></b>
+                    <span>联系人</span>
+                    <span class="fri-num">22</span>
+                </li>
             </ul>
-            <div class="rel-list">
+            <div class="rel-list" v-show="isOpen">
                 <p>A</p>
                 <hr>
                 <ul>
-                    <li><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
-                    <li><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
+                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
+                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
                 </ul>
                 <p>B</p>
                 <hr>
                 <ul>
-                    <li><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                    <li><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="right">
+        <!--聊天窗口-->
         <div v-show="isShow">
             <div class="separator"></div>
             <div class="chat-person">
@@ -89,7 +118,8 @@
                 </div>
             </div>
         </div>
-        <div class="rel-detail" v-show="isShow2">
+        <!--好友详情-->
+        <div class="rel-detail" v-show="isOpenDetail">
             <div class="rel-title">
                 <span class="name">孔令凯</span>
                 <img src="imgs/konglk.jpg">
@@ -99,10 +129,10 @@
                 <ul>
                     <li><span class="title">备注名</span><span class="msg">孔令凯</span></li>
                     <li><span class="title">微信名</span><span class="msg">孔令凯</span></li>
-                    <li><span class="title">来  源</span><span class="msg">孔令凯</span></li>
+                    <li><span class="title">来&nbsp;&nbsp;源</span><span class="msg">孔令凯</span></li>
                 </ul>
             </div>
-            <button>发消息</button>
+            <button @click="sendMsgFromRelationship">发消息</button>
         </div>
     </div>
 </div>

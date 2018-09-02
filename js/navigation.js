@@ -1,6 +1,6 @@
 const V = require('./js/vue')
 V.component('nav-left',{
-    props:['user'],
+    props:['user','isfloat'],
     data: function () {
         return {
             imgUrl1: "imgs/p1.png",
@@ -12,7 +12,7 @@ V.component('nav-left',{
              <div class="left" id="nav-left">
                 <ul>
                     <li>
-                       <a>
+                       <a @click="showUserDtl(isfloat)">
                             <img id="profile" v-bind:src="user.imgUrl">
                         </a>
                     </li>
@@ -54,7 +54,10 @@ V.component('nav-left',{
                 isShow : s1,
                 isShow2: s2
             }
-            this.$emit('change', data)
+            this.$emit('change-show', data)
+        },
+        showUserDtl: function(data){
+            this.$emit('show-user', !data)
         }
     }
 })

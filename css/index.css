@@ -169,6 +169,7 @@ span.myself, span.other-person{
 .relationships li{
     height: 50px;
     line-height: 50px;
+    cursor: pointer;
 }
 .relationships li span{
     font-size: 14px;
@@ -180,8 +181,8 @@ span.myself, span.other-person{
 }
 .relationships .arrow-border {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     margin: 0 10px;
     border-top: 1px solid #BEBEBE;
     border-right: 1px solid #BEBEBE;
@@ -189,8 +190,9 @@ span.myself, span.other-person{
 .relationships .arrow-right {
     transform: rotate(45deg);
 }
-.relationships .arrow-left {
-    transform: rotate(-135deg);
+.relationships .arrow-down {
+    margin-bottom: 2px;
+    transform: rotate(135deg);
 }
 .relationships .fri-num {
     float: right;
@@ -266,4 +268,60 @@ span.myself, span.other-person{
     background-color: #1AAD19;
     margin: 50px auto;
     display: block;
+    cursor: pointer;
+}
+.bomb-box{
+    width: 340px;
+    height: 260px;
+    position: absolute;
+    margin-top: 20px;
+    margin-left: 60px;
+    background-color: #FFFFFF;
+    z-index: 1000;
+}
+.bomb-box-content{
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    margin: 35px auto auto 34px;
+}
+.bomb-box-content .name{
+    font-size: 18px;
+    margin: 8px 0;
+}
+.bomb-box-content .wx{
+    font-size: 14px;
+    margin: 8px 0;
+    color: #A9A9A9;
+}
+.bomb-box-content .imgUrl{
+    width: 60px;
+    height: 60px;
+    display: inline;
+    float: right;
+}
+.bomb-box-content hr{
+    height: 1px;
+    border: none;
+    border-top: 1px solid #D3D3D3;
+    margin: 30px auto
+}
+.bomb-box-content .address{
+    margin-left: 30px;
+    font-size: 14px;
+}
+.bomb-box-content .icon{
+    height: 30px;
+    margin-top: 30px;
+    float: right;
+}
+.bomb-box-content .share{
+    width: 25px;
+    height: 30px;
+    margin-left: 30px;
+}
+.bomb-box-content .msg{
+    width: 34px;
+    height: 35px;
+    margin-left: 28px;
 }
