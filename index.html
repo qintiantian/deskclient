@@ -109,9 +109,17 @@
                 </ul>
             </div>
             <div class="send-area">
-                <div class=""></div>
                 <div class="content-area">
-                    <textarea rows="4" class="content" v-on:keydown.enter="sendMsg"></textarea>
+                    <div class="menu-area">
+                        <span class="menu-item">
+                            <!--<i @click="propFile" class="fa fa-file fa-7x"></i>-->
+                            <img @click="propFile" src="./imgs/file.png">
+                        </span>
+                    </div>
+                    <div rows="4" class="content" v-on:keydown.enter="sendMsg">
+                        <div class="img-area"></div>
+                        <textarea rows="3"></textarea>
+                    </div>
                 </div>
                 <div class="">
                     <button v-on:click="sendMsg" class="send-btn"><span>发送(S)</span></button>
