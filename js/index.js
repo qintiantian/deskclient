@@ -5,6 +5,7 @@ const uuid = require('uuid')
 const {ipcRenderer, remote, shell} = require('electron')
 const os = require('os')
 const fs = require('fs')
+const prepend = require('./js/prepend')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -31,7 +32,9 @@ const modelData = {
     isOpen: false,//联系人列表展示
     isOpenDetail: false,//联系人详细信息展示
     isFloat: false,//用户详情展示
-    filepaths:[]
+    filepaths:[],
+    relationships: {},
+    relationshipsCount:0
 };
 
 let header = {
@@ -64,7 +67,7 @@ let vm = new Vue({
                     filereq.setReqtype(messages.ProtocolMessage.RequestType.CHAT)
                     let filechat = new messages.CPrivateChat()
                     let data = fs.readFileSync(filepath,'binary')
-                    filechat.setContent(Buffer.from(data))
+                    filechat.setContent(Buffer.from(data,'binary'))
                     filechat.setDestid(this.chatPerson.destId)
                     filechat.setUserid(this.user.userId)
                     filechat.setChattype(messages.CPrivateChat.ChatType.ONE2ONE)
@@ -73,7 +76,7 @@ let vm = new Vue({
                     filereq.setChat(filechat)
                     filemsg.setRequest(filereq)
                     let bytes = filemsg.serializeBinary()
-                    client.write(bytes)
+                    client.write(prepend.formFrame(bytes))
                     content = '图片'
                     // fs.close()
                 }
@@ -217,6 +220,32 @@ let vm = new Vue({
         },
         openContact: function (data) {
             this.isOpen = !data;
+            if(this.isOpen){
+                this.selectRelationships();
+            }
+        },
+        selectRelationships: function(){
+            let path = '/user/' + sharedObject.userId + '/relationships'
+            $.get({
+                url: sharedObject.url + path,
+                timeout: sharedObject.timeout,
+                headers: header
+            }).done(function (res) {
+                $(".rel-list").empty();
+                modelData.relationshipsCount = 0;
+                modelData.relationships = res
+                for(let fpinyin in modelData.relationships){
+                    let listr = '';
+                    if(modelData.relationships[fpinyin] != '' && modelData.relationships[fpinyin] != []){
+                        let relationshipList = modelData.relationships[fpinyin]
+                        for(let i in relationshipList){
+                            listr += '<li @click="openDetail()"><a><img src="'+relationshipList[i].imgUrl+'"></a><span>'+relationshipList[i].nickname+'</span></li>';
+                        }
+                        modelData.relationshipsCount+= relationshipList.length;
+                    }
+                    $(".rel-list").append("<p>"+fpinyin+"</p><hr><ul>"+listr+"</ul>");
+                }
+            })
         },
         openDetail: function () {
             this.isOpenDetail = true

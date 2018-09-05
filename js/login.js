@@ -2,6 +2,7 @@ const Vue = require('./js/vue')
 const {ipcRenderer, remote} = require('electron')
 const messages = require("./js/message_pb")
 const uuid = require('uuid')
+const prepend = require('./js/prepend')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -30,7 +31,7 @@ let vm = new Vue({
             req.setLogin(clogin)
             message.setRequest(req)
             let bytes = message.serializeBinary()
-            client.write(Buffer.from(bytes))
+            client.write(prepend.formFrame(Buffer.from(bytes)))
         }
     }
 })

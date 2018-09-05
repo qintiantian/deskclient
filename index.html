@@ -67,22 +67,23 @@
                 <li @click="openContact(isOpen)">
                     <b class="arrow-border" v-bind:class="isOpen? 'arrow-down':'arrow-right'"></b>
                     <span>联系人</span>
-                    <span class="fri-num">22</span>
+                    <span class="fri-num">{{relationshipsCount == 0 ? "" : relationshipsCount}}</span>
                 </li>
             </ul>
             <div class="rel-list" v-show="isOpen">
-                <p>A</p>
-                <hr>
-                <ul>
-                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
-                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>孔令凯</span></li>
-                </ul>
-                <p>B</p>
+                <!--<div v-for="fpinyin in modelData.relationships">
+                    <p>{{fpinyin}}</p>
+                    <hr>
+                    <ul>
+                        <li v-for="relationship in relationships.get(fpinyin)" @click="openDetail()"><a><img :src="relationship.imgUrl"></a><span>{{ relationship.nickname }}</span></li>
+                    </ul>
+                </div>-->
+                <!--<p>B</p>
                 <hr>
                 <ul>
                     <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
                     <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                </ul>
+                </ul>-->
             </div>
         </div>
     </div>
