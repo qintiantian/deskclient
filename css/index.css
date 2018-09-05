@@ -214,7 +214,7 @@ span.myself, span.other-person{
 .send-area .content{
     overflow-y: scroll;
     overflow-x: hidden;
-    width:100px;
+    height:100px;
 }
 .menu-area{
     height: 20px;

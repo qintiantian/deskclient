@@ -314,7 +314,7 @@ $(function () {
 
 window.onresize = function () {
     $(".left, .median, .right").height($(window).height());
-    $(".right").width($(window).width() - leftWidth - median );
+    $(".right").width($(window).width() - leftWidth - median-1 );
     $(".chat-area").height($(window).height() - topHeight - bottomHeight)
 }
 
