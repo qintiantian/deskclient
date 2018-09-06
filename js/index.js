@@ -95,7 +95,7 @@ let vm = new Vue({
                 req.setChat(chat)
                 message.setRequest(req)
                 let bytes = message.serializeBinary()
-                client.write(Buffer.from(bytes))
+                client.write(prepend.formFrame(bytes))
             }
             $('.content textarea').val('')
             $('.img-area').empty()
