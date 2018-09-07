@@ -71,6 +71,7 @@ global.sharedObject = {
     userId:'',
     certificate:'',
     url:'http://'+host+'/ims',
+    imgUrl:'http://'+host,
     host:host,
     tcpport:tcpport,
     timeout:10000,

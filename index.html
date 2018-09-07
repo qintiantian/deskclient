@@ -129,11 +129,21 @@
                     <li v-for="message in messages">
                         <div v-if="message.sendId==user.userId">
                             <a class="myself"><img v-bind:src="user.imgUrl"></a>
-                            <span class="myself">{{message.content}}</span>
+                            <div v-if="message.msgType==3">
+                                <a><img :src="sharedObject.imgUrl+'/'+message.content" class="myself-content"></a>
+                            </div>
+                            <div v-if="message.msgType==0">
+                                <span class="myself">{{message.content}}</span>
+                            </div>
                         </div>
                         <div v-else>
                             <a class="other-person"><img v-bind:src="chatPerson.imgUrl"></a>
-                            <span class="other-person">{{message.content}}</span>
+                            <div v-if="message.msgType==3">
+                                <a><img :src="sharedObject.imgUrl+'/'+message.content" class="other-person-content"></a>
+                            </div>
+                            <div v-if="message.msgType==0">
+                                <span class="other-person">{{message.content}}</span>
+                            </div>
                         </div>
                         <div class="clear"></div>
                     </li>

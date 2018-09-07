@@ -162,6 +162,16 @@
 .myself img, .other-person img{
     width:35px;
 }
+.myself-content{
+    float: right;
+    margin-right: 10px;
+    max-width: 50%;
+}
+.other-person-content{
+    float: left;
+    margin-left: 10px;
+    max-width: 50%;
+}
 .chat-area{
     height:360px;
     overflow: scroll;
