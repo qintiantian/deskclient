@@ -34,6 +34,7 @@
         <div class="search">
             <i class="fa fa-search"></i>
             <input class="" id="search-input" type="text" placeholder=""/>
+            <img src="imgs/add.png" class="add-friend">
         </div>
         <!--会话列表-->
         <div class="conversations" v-show="isShow">
@@ -61,14 +62,14 @@
         <div class="relationships" v-show="isShow2">
             <ul>
                 <li @click="openNewFriends(isOpenNewFriend)">
-                    <b class="arrow-border arrow-right"></b>
+                    <b class="arrow-border" v-bind:class="isOpenNewFriend? 'arrow-down':'arrow-right'"></b>
                     <span class="title-span">新的朋友</span>
                     <span class="fri-num">{{newFriendsCount == 0 ? "" : newFriendsCount}}</span>
                 </li>
                 <div class="friend-list" v-show="isOpenNewFriend">
                     <ul>
                         <div v-for="(friend,index) in newFriends">
-                            <li @click="openDetail(friend.userId)">
+                            <li @click="openDetail(friend.userId, friend.status)">
                                 <div >
                                     <input type="hidden" value="{{friend.userId}}">
                                     <span>
@@ -95,24 +96,11 @@
                         <p>{{fPinyin}}</p>
                         <hr>
                         <ul>
-                            <li v-for="(relationship) in relationshipList[index]" @click="openDetail(relationship.userId)">
+                            <li v-for="(relationship) in relationshipList[index]" @click="openDetail(relationship.userId, relationship.status)">
                                 <a><img :src="relationship.imgUrl"></a><span>{{relationship.nickname}}</span>
                             </li>
                         </ul>
                     </div>
-                    <!--
-                    <p>A</p>
-                    <hr>
-                    <ul>
-                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                    </ul>
-                    <p>B</p>
-                    <hr>
-                    <ul>
-                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                    </ul>-->
                 </div>
             </ul>
         </div>
@@ -181,7 +169,7 @@
                     <li><span class="title">来&nbsp;&nbsp;源</span><span class="msg"></span></li>
                 </ul>
             </div>
-            <button @click="sendMsgFromRelationship">发消息</button>
+            <button @click="btn=='发消息' ? sendMsgFromRelationship : pass(friend.userId)">{{btn}}</button>
         </div>
     </div>
 </div>

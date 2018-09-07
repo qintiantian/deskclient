@@ -45,7 +45,8 @@ const modelData = {
         'nickname': '',
         'imgUrl': '',
         'remark':''
-    }
+    },
+    btn:''
 };
 
 let header = {
@@ -266,6 +267,9 @@ let vm = new Vue({
                 headers: header
             }).done(function (res) {
                 modelData.relationships = res
+                modelData.fPinyinList = [];
+                modelData.relationshipList = [];
+                modelData.relationshipsCount = 0;
                 for(let fPinyin in modelData.relationships){
                     modelData.fPinyinList.push(fPinyin);
                     modelData.relationshipList.push(modelData.relationships[fPinyin]);
@@ -276,7 +280,8 @@ let vm = new Vue({
         /**
          * 获取好友详情
          */
-        openDetail: function (userId) {
+        openDetail: function (userId, status) {
+            status == '1' ? modelData.btn = '通过验证' : modelData.btn = '发消息'
             this.isOpenDetail = true
             let path = '/user/' + sharedObject.userId + '/relationships/'+userId+'/detail'
             $.get({
@@ -287,6 +292,9 @@ let vm = new Vue({
                 modelData.friend = res
             })
         },
+        /**
+         * 好友详情发消息
+         */
         sendMsgFromRelationship: function () {
             let d = {
                 isShow: true,
@@ -294,6 +302,27 @@ let vm = new Vue({
             }
             this.updateShow(d)
             //TODO 会话列表第一条展示当前好友会话
+        },
+        /**
+         * 通过好友验证
+         */
+        pass: function(fromUser) {
+            let path = '/user/' + sharedObject.userId + '/relationships/'+fromUser+'/pass'
+            let t = this;
+            $.post({
+                url: sharedObject.url + path,
+                timeout: sharedObject.timeout,
+                headers: header
+            }).done(function (res) {
+                //验证通过
+                if(res == 1){
+                    t.selectNewFriends()//重新加载新朋友
+                    t.openDetail(fromUser, '2')//重新加载好友详情
+                    if(modelData.isOpen){
+                        t.selectRelationships()//如果联系人列表展开，则重新加载好友列表
+                    }
+                }
+            })
         },
         showUserDtl: function (data) {
             this.isFloat = data
