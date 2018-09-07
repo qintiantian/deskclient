@@ -31,10 +31,21 @@ const modelData = {
     isShow2: false,//好友列表展示
     isOpen: false,//联系人列表展示
     isOpenDetail: false,//联系人详细信息展示
+    isOpenNewFriend: false,//新朋友列表展示
     isFloat: false,//用户详情展示
     filepaths:[],
+    newFriends:[],
+    newFriendsCount:0,
     relationships: {},
-    relationshipsCount:0
+    fPinyinList:[],
+    relationshipList: [],
+    relationshipsCount:0,
+    friend: {
+        'userId': '',
+        'nickname': '',
+        'imgUrl': '',
+        'remark':''
+    }
 };
 
 let header = {
@@ -224,6 +235,29 @@ let vm = new Vue({
                 this.selectRelationships();
             }
         },
+        openNewFriends: function (data) {
+            this.isOpenNewFriend = !data;
+            if(this.isOpenNewFriend){
+                this.selectNewFriends();
+            }
+        },
+        /**
+         * 获取新朋友
+         */
+        selectNewFriends: function(){
+            let path = '/user/' + sharedObject.userId + '/relationships/new'
+            $.get({
+                url: sharedObject.url + path,
+                timeout: sharedObject.timeout,
+                headers: header
+            }).done(function (res) {
+                modelData.newFriends = res
+                modelData.newFriendsCount = res.length;
+            })
+        },
+        /**
+         * 获取好友列表
+         */
         selectRelationships: function(){
             let path = '/user/' + sharedObject.userId + '/relationships'
             $.get({
@@ -231,24 +265,27 @@ let vm = new Vue({
                 timeout: sharedObject.timeout,
                 headers: header
             }).done(function (res) {
-                $(".rel-list").empty();
-                modelData.relationshipsCount = 0;
                 modelData.relationships = res
-                for(let fpinyin in modelData.relationships){
-                    let listr = '';
-                    if(modelData.relationships[fpinyin] != '' && modelData.relationships[fpinyin] != []){
-                        let relationshipList = modelData.relationships[fpinyin]
-                        for(let i in relationshipList){
-                            listr += '<li @click="openDetail()"><a><img src="'+relationshipList[i].imgUrl+'"></a><span>'+relationshipList[i].nickname+'</span></li>';
-                        }
-                        modelData.relationshipsCount+= relationshipList.length;
-                    }
-                    $(".rel-list").append("<p>"+fpinyin+"</p><hr><ul>"+listr+"</ul>");
+                for(let fPinyin in modelData.relationships){
+                    modelData.fPinyinList.push(fPinyin);
+                    modelData.relationshipList.push(modelData.relationships[fPinyin]);
+                    modelData.relationshipsCount += modelData.relationships[fPinyin].length;
                 }
             })
         },
-        openDetail: function () {
+        /**
+         * 获取好友详情
+         */
+        openDetail: function (userId) {
             this.isOpenDetail = true
+            let path = '/user/' + sharedObject.userId + '/relationships/'+userId+'/detail'
+            $.get({
+                url: sharedObject.url + path,
+                timeout: sharedObject.timeout,
+                headers: header
+            }).done(function (res) {
+                modelData.friend = res
+            })
         },
         sendMsgFromRelationship: function () {
             let d = {

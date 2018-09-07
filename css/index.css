@@ -258,10 +258,9 @@ span.myself, span.other-person{
     line-height: 50px;
     cursor: pointer;
 }
-.relationships li span{
+.relationships .title-span, .fri-num{
     font-size: 14px;
     font-weight: 400;
-
 }
 .relationships li b{
     margin-left: 10px;
@@ -286,7 +285,7 @@ span.myself, span.other-person{
     margin-right: 15px;
     color: #BEBEBE;
 }
-.rel-list{
+.rel-list, .friend-list {
     margin-left: 30px;
 }
 .rel-list p {
@@ -311,6 +310,47 @@ span.myself, span.other-person{
     font-size: 14px;
     font-weight: 400;
 
+}
+.friend-list div{
+    height: 54px;
+    line-height: 54px;
+}
+.friend-list img{
+    width: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.friend-list hr{
+    height: 1px;
+    border: none;
+    border-top: 1px solid #D3D3D3;
+    margin: 2px auto;
+}
+.friend-list li{
+    position: relative;
+}
+.nickname-span{
+    left:40px;
+    position: absolute;
+    top: -9px;
+    font-size: 12px;
+}
+.call-span{
+    position: absolute;
+    bottom: -15px;
+    font-size: 12px;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.status-span{
+    color: #999999;
+    float:right;
+    font-size:0.7em;
+    top: -9px;
+    right: 10px;
+    position: absolute;
 }
 .rel-detail{
     width: 60%;

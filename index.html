@@ -60,31 +60,61 @@
         <!--好友列表-->
         <div class="relationships" v-show="isShow2">
             <ul>
-                <li>
+                <li @click="openNewFriends(isOpenNewFriend)">
                     <b class="arrow-border arrow-right"></b>
-                    <span>新的朋友</span>
+                    <span class="title-span">新的朋友</span>
+                    <span class="fri-num">{{newFriendsCount == 0 ? "" : newFriendsCount}}</span>
                 </li>
-                <li @click="openContact(isOpen)">
+                <div class="friend-list" v-show="isOpenNewFriend">
+                    <ul>
+                        <div v-for="(friend,index) in newFriends">
+                            <li @click="openDetail(friend.userId)">
+                                <div >
+                                    <input type="hidden" value="{{friend.userId}}">
+                                    <span>
+                                        <img v-bind:src="friend.imgUrl">
+                                    </span>
+                                    <span>
+                                        <span class="nickname-span">{{friend.nickname}}</span>
+                                        <span class="status-span">{{friend.status == 1? "等待验证":"已添加"}}</span>
+                                        <span class="call-span">打招呼</span>
+                                    </span>
+                                    <hr v-if="index!=newFriends.length-1">
+                                </div>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+                <li @click="openContact(isOpen)" class="title-li">
                     <b class="arrow-border" v-bind:class="isOpen? 'arrow-down':'arrow-right'"></b>
-                    <span>联系人</span>
+                    <span class="title-span">联系人</span>
                     <span class="fri-num">{{relationshipsCount == 0 ? "" : relationshipsCount}}</span>
                 </li>
-            </ul>
-            <div class="rel-list" v-show="isOpen">
-                <!--<div v-for="fpinyin in modelData.relationships">
-                    <p>{{fpinyin}}</p>
+                <div class="rel-list" v-show="isOpen">
+                    <div v-for="(fPinyin, index) in fPinyinList">
+                        <p>{{fPinyin}}</p>
+                        <hr>
+                        <ul>
+                            <li v-for="(relationship) in relationshipList[index]" @click="openDetail(relationship.userId)">
+                                <a><img :src="relationship.imgUrl"></a><span>{{relationship.nickname}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--
+                    <p>A</p>
                     <hr>
                     <ul>
-                        <li v-for="relationship in relationships.get(fpinyin)" @click="openDetail()"><a><img :src="relationship.imgUrl"></a><span>{{ relationship.nickname }}</span></li>
+                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
                     </ul>
-                </div>-->
-                <!--<p>B</p>
-                <hr>
-                <ul>
-                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                    <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
-                </ul>-->
-            </div>
+                    <p>B</p>
+                    <hr>
+                    <ul>
+                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                        <li @click="openDetail()"><a><img src="imgs/konglk.jpg"></a><span>秦田田</span></li>
+                    </ul>-->
+                </div>
+            </ul>
         </div>
     </div>
     <div class="right">
@@ -130,15 +160,15 @@
         <!--好友详情-->
         <div class="rel-detail" v-show="isOpenDetail">
             <div class="rel-title">
-                <span class="name">孔令凯</span>
-                <img src="imgs/konglk.jpg">
+                <span class="name">{{friend.nickname}}</span>
+                <img :src="friend.imgUrl">
             </div>
             <hr>
             <div class="rel-content">
                 <ul>
-                    <li><span class="title">备注名</span><span class="msg">孔令凯</span></li>
-                    <li><span class="title">微信名</span><span class="msg">孔令凯</span></li>
-                    <li><span class="title">来&nbsp;&nbsp;源</span><span class="msg">孔令凯</span></li>
+                    <li><span class="title">备注名</span><span class="msg">{{friend.remark}}</span></li>
+                    <li><span class="title">微信号</span><span class="msg">{{friend.userId}}</span></li>
+                    <li><span class="title">来&nbsp;&nbsp;源</span><span class="msg"></span></li>
                 </ul>
             </div>
             <button @click="sendMsgFromRelationship">发消息</button>
