@@ -1,8 +1,7 @@
 const Vue = require('./js/vue')
 const {ipcRenderer, remote} = require('electron')
-const messages = require("./js/message_pb")
-const uuid = require('uuid')
-const prepend = require('./js/prepend')
+const message_pb = require("./js/message_pb")
+const msgBuilder = require('./js/message_builder')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -10,7 +9,6 @@ let client = sharedObject.client
 let modelData = {
     'userId': '18062743820',
     'pwd': 'konglk'
-
 }
 
 let vm = new Vue({
@@ -18,26 +16,14 @@ let vm = new Vue({
     data: modelData,
     methods: {
         login: function () {
-            let message = new messages.ProtocolMessage()
-            let req = new messages.ProtocolMessage.TRequest()
-            req.setReqtype(messages.ProtocolMessage.RequestType.LOGIN)
-            let clogin = new messages.CLogin()
-            clogin.setMsgid(uuid.v1())
-            clogin.setUserid(this.userId)
-            clogin.setPwd(this.pwd)
-            clogin.setDevicetype(messages.CLogin.DeviceType.WINDOWS)
-            clogin.setTs(new Date().getTime())
-            clogin.setVersion(1)
-            req.setLogin(clogin)
-            message.setRequest(req)
-            let bytes = message.serializeBinary()
-            client.write(prepend.formFrame(Buffer.from(bytes)))
+            let bytes = msgBuilder.loginMessage(this.userId, this.pwd)
+            client.write(bytes)
         }
     }
 })
 
 client.on("data", function (bytes) {
-    let message = messages.ProtocolMessage.deserializeBinary(bytes)
+    let message = message_pb.ProtocolMessage.deserializeBinary(bytes)
     console.log(message)
     let response = message.getResponse()
     // let respType = response.getResptype()

@@ -1,11 +1,11 @@
 const Vue = require('./js/vue')
-const messages = require("./js/message_pb")
+const message_pb = require("./js/message_pb")
 const $ = require('jquery')
 const uuid = require('uuid')
 const {ipcRenderer, remote, shell} = require('electron')
 const os = require('os')
 const fs = require('fs')
-const prepend = require('./js/prepend')
+const msgBuilder = require('./js/message_builder')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -74,51 +74,39 @@ let vm = new Vue({
             if($('.img-area img').length > 0) {
                 for(let i in modelData.filepaths) {
                     let filepath = modelData.filepaths[i]
-                    let filemsg = new messages.ProtocolMessage()
-                    let filereq = new messages.ProtocolMessage.TRequest()
-                    filereq.setReqtype(messages.ProtocolMessage.RequestType.CHAT)
-                    let filechat = new messages.CPrivateChat()
                     let data = fs.readFileSync(filepath,'binary')
-                    filechat.setContent(Buffer.from(data,'binary'))
-                    filechat.setDestid(this.chatPerson.destId)
-                    filechat.setUserid(this.user.userId)
-                    filechat.setChattype(messages.CPrivateChat.ChatType.ONE2ONE)
-                    filechat.setDatatype(messages.CPrivateChat.DataType.IMG)
-                    filechat.setExtname(filepath.substring(filepath.lastIndexOf('\.')+1))
-                    filereq.setChat(filechat)
-                    filemsg.setRequest(filereq)
-                    let bytes = filemsg.serializeBinary()
-                    client.write(prepend.formFrame(bytes))
-                    content = '图片'
-                    // fs.close()
+                    let chatMsg = {
+                        userId: this.user.userId,
+                        destId: this.chatPerson.destId,
+                        content: Buffer.from(data,'binary'),
+                        dataType: message_pb.CPrivateChat.DataType.IMG,
+                        extName: filepath.substring(filepath.lastIndexOf('\.')+1)
+                    }
+                    let bytes = msgBuilder.chatMessage(chatMsg)
+                    client.write(bytes)
                 }
             }else{
-                let message = new messages.ProtocolMessage()
-                let req = new messages.ProtocolMessage.TRequest()
-                req.setReqtype(messages.ProtocolMessage.RequestType.CHAT)
-                let chat = new messages.CPrivateChat()
-                chat.setMsgid(uuid.v1())
                 content = $('.content textarea').val()
-                chat.setContent(Buffer.from(content))
-                chat.setDestid(this.chatPerson.destId)
-                chat.setUserid(this.user.userId)
-                chat.setChattype(messages.CPrivateChat.ChatType.ONE2ONE)
-                chat.setDatatype(messages.CPrivateChat.DataType.TXT)
-                req.setChat(chat)
-                message.setRequest(req)
-                let bytes = message.serializeBinary()
-                client.write(prepend.formFrame(bytes))
+                let chatMsg = {
+                    userId: this.user.userId,
+                    destId: this.chatPerson.destId,
+                    content: content,
+                    dataType: message_pb.CPrivateChat.DataType.TXT
+                }
+                let bytes = msgBuilder.chatMessage(chatMsg)
+                client.write(bytes)
             }
-            $('.content textarea').val('')
-            $('.img-area').empty()
             let m = {
                 "msgId": this.chatPerson.msgId,
                 "sendId": this.user.userId,
                 "destId": this.chatPerson.destId,
                 "content": content,
-                "createtime": new Date()
+                "createtime": new Date(),
+                "msgType": 0
             }
             modelData.messages.push(m)
+            $('.content textarea').val('')
+            $('.img-area').empty()
             this.getConversations()
             this.scrollToEnd()
         },
@@ -348,10 +336,10 @@ let vm = new Vue({
 })
 
 client.on('data', function (bytes) {
-    let message = messages.ProtocolMessage.deserializeBinary(bytes)
+    let message = message_pb.ProtocolMessage.deserializeBinary(bytes)
     console.log(message)
     let response = message.getResponse()
-    if (response.getResptype() == messages.ProtocolMessage.RequestType.LOGIN) {
+    if (response.getResptype() == message_pb.ProtocolMessage.RequestType.LOGIN) {
         let resp = response.getResp();
         if (resp.getCode() == 200) {
             sharedObject.userId = resp.getUserid()
@@ -404,13 +392,13 @@ client.on('close', function () {
 let leftWidth = 60, median = 252, topHeight = 60, bottomHeight = 130
 
 $(function () {
-    $(".left, .median, .right").height($(window).height())
+    $(".left, .median, .right").height($(window).height()-1)
 })
 
 window.onresize = function () {
-    $(".left, .median, .right").height($(window).height());
+    $(".left, .median, .right").height($(window).height()-1);
     $(".right").width($(window).width() - leftWidth - median-1 );
-    $(".chat-area").height($(window).height() - topHeight - bottomHeight)
+    $(".chat-area").height($(window).height() - topHeight - bottomHeight-1)
 }
 
 
