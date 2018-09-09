@@ -141,8 +141,10 @@
                 <div class="content-area">
                     <div class="menu-area">
                         <span class="menu-item">
-                            <!--<i @click="propFile" class="fa fa-file fa-7x"></i>-->
                             <img @click="propFile" src="./imgs/file.png">
+                        </span>
+                        <span class="menu-item videa-chat">
+                            <img @click="videoChat" src="./imgs/video.png">
                         </span>
                     </div>
                     <div rows="4" class="content" v-on:keydown.enter="sendMsg">

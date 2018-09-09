@@ -20,6 +20,13 @@ ipcMain.on('index-show', function () {
      win[0].close()
 })
 
+ipcMain.on('video-chat', function() {
+    let v = new BrowserWindow({width:600,height:500,autoHideMenuBar: true})
+    win[2] = v
+    v.loadFile('video-chat.html')
+    v.webContents.openDevTools()
+})
+
 function createWindow () {
     // 创建浏览器窗口。850 600
     win[0] = new BrowserWindow({width: 290, height: 410, autoHideMenuBar : true, backgroundColor:'#F5F5F5'})
@@ -58,8 +65,8 @@ app.on('activate', () => {
     }
 })
 
-// let host='39.106.133.40'
-let host='localhost'
+let host='39.106.133.40'
+// let host='localhost'
 let tcpport='8090'
 let client = new net.Socket()
 client.connect(tcpport, host, function () {

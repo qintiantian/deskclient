@@ -322,10 +322,16 @@ let vm = new Vue({
                     {name: '所有文件（*.*）', extensions: ['*']}],
                 properties: ['openFile', 'multiSelections']
             }, function (filePaths) {
-                $('.img-area').append("<img class='send-img' src='"+filePaths[0]+"'>")
-                 console.log(filePaths)
-                modelData.filepaths = filePaths
+                if(filePaths) {
+                    for(let i in filePaths)
+                        $('.img-area').append("<img class='send-img' src='"+filePaths[i]+"'>")
+                    console.log(filePaths)
+                    modelData.filepaths = filePaths
+                }
             });
+        },
+        videoChat: function() {
+            ipcRenderer.send('video-chat')
         },
         init: function () {
             this.getUserProfile()

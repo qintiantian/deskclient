@@ -470,3 +470,6 @@ span.myself, span.other-person{
     height: 35px;
     margin-left: 28px;
 }
+span.videa-chat{
+    float: right;
+}
