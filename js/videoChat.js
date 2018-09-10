@@ -23,16 +23,15 @@ function send(message) {
 };
 
 //connecting to our signaling server
-let conn =  new WebSocket('ws://localhost:3000');
-
-conn.onopen = function () {
+let conn =  new WebSocket("ws://localhost:3000")
+conn.onopen = function() {
     console.log("Connected to the signaling server");
     let msg = {
         'type':'login',
         'name': sharedObject.userId,
     }
     conn.send(JSON.stringify(msg))
-};
+}
 
 //when we got a message from a signaling server
 conn.onmessage = function (msg) {
@@ -88,22 +87,28 @@ function handleLogin(success) {
                     });
                 }
             };
-            console.log('create offer to'+chatPerson.destId)
-            connectedUser = chatPerson.destId
-            yourConn.createOffer(function (offer) {
-                send({
-                    type: "offer",
-                    offer: offer
-                });
-                yourConn.setLocalDescription(offer);
-            }, function (error) {
-                alert("Error when creating an offer");
-            });
 
         }, function (error) {
             console.log(error);
         });
     }
+}
+
+function createOffer(d) {
+    console.log('create offer to'+chatPerson.destId)
+    connectedUser = chatPerson.destId
+    if(d)
+        connectedUser = d
+    yourConn.createOffer(function (offer) {
+        send({
+            type: "offer",
+            offer: offer
+        });
+        yourConn.setLocalDescription(offer);
+    }, function (error) {
+        alert("Error when creating an offer");
+    });
+
 }
 
 

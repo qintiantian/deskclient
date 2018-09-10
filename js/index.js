@@ -71,6 +71,7 @@ let vm = new Vue({
         sendMsg: function (event) {
             event.preventDefault()
             let content = ''
+            let msgType = 0
             if($('.img-area img').length > 0) {
                 for(let i in modelData.filepaths) {
                     let filepath = modelData.filepaths[i]
@@ -84,6 +85,7 @@ let vm = new Vue({
                     }
                     let bytes = msgBuilder.chatMessage(chatMsg)
                     client.write(bytes)
+                    msgType = message_pb.CPrivateChat.DataType.IMG
                 }
             }else{
                 content = $('.content textarea').val()
@@ -102,7 +104,7 @@ let vm = new Vue({
                 "destId": this.chatPerson.destId,
                 "content": content,
                 "createtime": new Date(),
-                "msgType": 0
+                "msgType": msgType
             }
             modelData.messages.push(m)
             $('.content textarea').val('')
@@ -363,7 +365,9 @@ client.on('data', function (bytes) {
         "destId": chat.getDestid(),
         "content": decoder.decode(chat.getContent_asU8()),
         "createtime": chat.getTs(),
-        "msgId": chat.getMsgid()
+        "msgId": chat.getMsgid(),
+        "msgType": chat.getDatatype()
+
     }
     modelData.destId2Message[m.sendId].push(m)
     vm.scrollToEnd()
@@ -396,7 +400,16 @@ client.on('close', function () {
         client.write(Buffer.from(bytes))
     })
 })
+let conn = sharedObject.webSocket
 
+conn.onopen = function () {
+    console.log("Connected to the signaling server");
+    let msg = {
+        'type':'login',
+        'name': sharedObject.userId,
+    }
+    conn.send(JSON.stringify(msg))
+};
 
 let leftWidth = 60, median = 252, topHeight = 60, bottomHeight = 130
 
