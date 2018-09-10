@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, Tray, Menu} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const net =  require('net')
 
@@ -12,7 +12,7 @@ ipcMain.on('index-show', function () {
     indexWin.setMinimumSize(720,500)
     indexWin.setTitle('')
     indexWin.loadFile('index.html')
-    indexWin.webContents.openDevTools()
+    // indexWin.webContents.openDevTools()
     indexWin.on('closed', () => {
         client.destroy()
         win[1] = null
@@ -20,11 +20,13 @@ ipcMain.on('index-show', function () {
      win[0].close()
 })
 
-ipcMain.on('video-chat', function() {
+ipcMain.on('video-chat', function(event, data) {
     let v = new BrowserWindow({width:600,height:500,autoHideMenuBar: true})
-    win[2] = v
+    win.push(v)
     v.loadFile('video-chat.html')
+    // v.loadFile('client.html')
     v.webContents.openDevTools()
+    v.webContents.send('info', 'aaa')
 })
 
 function createWindow () {
@@ -35,7 +37,7 @@ function createWindow () {
     mainWin.loadFile('login.html')
 
     // 打开开发者工具
-    mainWin.webContents.openDevTools()
+    // mainWin.webContents.openDevTools()
 
     // 当 window 被关闭，这个事件会被触发。
     mainWin.on('closed', () => {
@@ -83,5 +85,6 @@ global.sharedObject = {
     tcpport:tcpport,
     timeout:10000,
     username:'',
-    pwd:''
+    pwd:'',
+    chatPerson:{}
 }

@@ -1,15 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>chat</title>
+    <title>WebRTC Video Demo</title>
+    <link rel = "stylesheet" href = "https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css"/>
 </head>
+<style>
+    body {
+        background: #eee;
+        padding: 5% 0;
+    }
+    video {
+        background: black;
+        border: 1px solid gray;
+    }
+    #localVideo {
+        width: 150px;
+        height: 150px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+    #remoteVideo {
+        width: 500px;
+        height: 500px;
+    }
+</style>
 <body>
-<div class="app">
-    <video id="otherVideo"></video>
-    <video id="myVideo"></video>
-</div>
 
-<script src="js/videoChat.js"></script>
+<div id = "callPage" class = "call-page">
+    <video id = "localVideo" autoplay></video>
+    <video id = "remoteVideo" autoplay></video>
+</div>
+<div>hello world</div>
+<script src = "js/videoChat.js"></script>
 </body>
 </html>

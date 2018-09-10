@@ -331,7 +331,8 @@ let vm = new Vue({
             });
         },
         videoChat: function() {
-            ipcRenderer.send('video-chat')
+            sharedObject.chatPerson =  this.chatPerson
+            ipcRenderer.send('video-chat', this.chatPerson.destId)
         },
         init: function () {
             this.getUserProfile()
@@ -395,6 +396,8 @@ client.on('close', function () {
         client.write(Buffer.from(bytes))
     })
 })
+
+
 let leftWidth = 60, median = 252, topHeight = 60, bottomHeight = 130
 
 $(function () {

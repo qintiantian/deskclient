@@ -1,37 +1,12 @@
-const {remote, ipcRenderer} = require('electron')
-
-let sharedObject = remote.getGlobal("sharedObject")
-var userId;
-var chatPerson = sharedObject.chatPerson;
-let connectedUser
-var yourConn;
-var localVideo = document.querySelector('#localVideo');
-var remoteVideo = document.querySelector('#remoteVideo');
-
-ipcRenderer.on('info', function (event, data) {
-    console.log("videoChat="+data)
-    destId = data
-})
-
-//alias for sending JSON encoded messages
-function send(message) {
-    //attach the other peer username to our messages
-    if (connectedUser) {
-        message.name = connectedUser;
-    }
-    conn.send(JSON.stringify(message));
-};
+//our username
+var name;
+var connectedUser;
 
 //connecting to our signaling server
-let conn =  new WebSocket('ws://localhost:3000');
+var conn = new WebSocket('ws://localhost:9090');
 
 conn.onopen = function () {
     console.log("Connected to the signaling server");
-    let msg = {
-        'type':'login',
-        'name': sharedObject.userId,
-    }
-    conn.send(JSON.stringify(msg))
 };
 
 //when we got a message from a signaling server
@@ -61,20 +36,73 @@ conn.onmessage = function (msg) {
     }
 };
 
+conn.onerror = function (err) {
+    console.log("Got error", err);
+};
+
+//alias for sending JSON encoded messages
+function send(message) {
+    //attach the other peer username to our messages
+    if (connectedUser) {
+        message.name = connectedUser;
+    }
+    conn.send(JSON.stringify(message));
+};
+
+//******
+//UI selectors block
+//******
+
+var loginPage = document.querySelector('#loginPage');
+var usernameInput = document.querySelector('#usernameInput');
+var loginBtn = document.querySelector('#loginBtn');
+
+var callPage = document.querySelector('#callPage');
+var callToUsernameInput = document.querySelector('#callToUsernameInput');
+var callBtn = document.querySelector('#callBtn');
+
+var hangUpBtn = document.querySelector('#hangUpBtn');
+
+var localVideo = document.querySelector('#localVideo');
+var remoteVideo = document.querySelector('#remoteVideo');
+
+var yourConn;
+var stream;
+
+callPage.style.display = "none";
+
+// Login when the user clicks the button
+loginBtn.addEventListener("click", function (event) {
+    name = usernameInput.value;
+    if (name.length > 0) {
+        send({
+            type: "login",
+            name: name
+        });
+    }
+});
 
 function handleLogin(success) {
-    if(success) {
+    if (success === false) {
+        alert("Ooops...try a different username");
+    } else {
+        loginPage.style.display = "none";
+        callPage.style.display = "block";
+        //**********************
+        //Starting a peer connection
+        //**********************
         //getting local video stream
         navigator.webkitGetUserMedia({ video: true, audio: true }, function (myStream) {
+            stream = myStream;
             //displaying local video stream on the page
-            localVideo.src = window.URL.createObjectURL(myStream);
+            localVideo.src = window.URL.createObjectURL(stream);
             //using Google public stun server
             var configuration = {
                 "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
             };
             yourConn = new webkitRTCPeerConnection(configuration);
             // setup stream listening
-            yourConn.addStream(myStream);
+            yourConn.addStream(stream);
             //when a remote user adds stream to the peer connection, we display it
             yourConn.onaddstream = function (e) {
                 remoteVideo.src = window.URL.createObjectURL(e.stream);
@@ -84,40 +112,44 @@ function handleLogin(success) {
                 if (event.candidate) {
                     send({
                         type: "candidate",
-                        candidate: event.candidate,
+                        candidate: event.candidate
                     });
                 }
             };
-            console.log('create offer to'+chatPerson.destId)
-            connectedUser = chatPerson.destId
-            yourConn.createOffer(function (offer) {
-                send({
-                    type: "offer",
-                    offer: offer
-                });
-                yourConn.setLocalDescription(offer);
-            }, function (error) {
-                alert("Error when creating an offer");
-            });
-
         }, function (error) {
             console.log(error);
         });
     }
-}
+};
 
+//initiating a call
+callBtn.addEventListener("click", function () {
+    var callToUsername = callToUsernameInput.value;
+    if (callToUsername.length > 0) {
+        connectedUser = callToUsername;
+        // create an offer
+        yourConn.createOffer(function (offer) {
+            send({
+                type: "offer",
+                offer: offer
+            });
+            yourConn.setLocalDescription(offer);
+        }, function (error) {
+            alert("Error when creating an offer");
+        });
+    }
+});
 
 //when somebody sends us an offer
 function handleOffer(offer, name) {
-    connectedUser = name
+    connectedUser = name;
     yourConn.setRemoteDescription(new RTCSessionDescription(offer));
     //create an answer to an offer
-    console.log("Send answer to"+name)
     yourConn.createAnswer(function (answer) {
         yourConn.setLocalDescription(answer);
         send({
             type: "answer",
-            answer: answer,
+            answer: answer
         });
     }, function (error) {
         alert("Error when creating an answer");
@@ -134,22 +166,19 @@ function handleCandidate(candidate) {
     yourConn.addIceCandidate(new RTCIceCandidate(candidate));
 };
 
+//hang up
+hangUpBtn.addEventListener("click", function () {
+
+    send({
+        type: "leave"
+    });
+    handleLeave();
+});
+
 function handleLeave() {
-    remoteVideo.src = null;
     connectedUser = null;
+    remoteVideo.src = null;
     yourConn.close();
     yourConn.onicecandidate = null;
     yourConn.onaddstream = null;
 };
-
-conn.onclose = function() {
-    console.log('leave')
-}
-
-
-conn.onerror = function (err) {
-    console.log("Got error", err);
-};
-
-
-
