@@ -12,7 +12,7 @@ ipcMain.on('index-show', function () {
     indexWin.setMinimumSize(720,500)
     indexWin.setTitle('')
     indexWin.loadFile('index.html')
-    // indexWin.webContents.openDevTools()
+    indexWin.webContents.openDevTools()
     indexWin.on('closed', () => {
         client.destroy()
         win[1] = null
@@ -37,7 +37,7 @@ function createWindow () {
     mainWin.loadFile('login.html')
 
     // 打开开发者工具
-    mainWin.webContents.openDevTools()
+    // mainWin.webContents.openDevTools()
 
     // 当 window 被关闭，这个事件会被触发。
     mainWin.on('closed', () => {

@@ -6,6 +6,7 @@ const {ipcRenderer, remote, shell} = require('electron')
 const os = require('os')
 const fs = require('fs')
 const msgBuilder = require('./js/message_builder')
+const lodash = require('lodash')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -23,9 +24,8 @@ const modelData = {
     conversations: [],
     messages: [],
     pageSize: 30,
-    scrollEnd: false,
-    destId2Message: {},
     unReadMsgCnt: {},
+    destIdMap:{},
     is_fresh: false,
     isShow: true,//会话列表展示
     isShow2: false,//好友列表展示
@@ -54,8 +54,11 @@ let header = {
     'userId': sharedObject.userId,
     'certificate': sharedObject.certificate
 }
-
-
+function loadMoreData(e) {
+    if (document.getElementById("chat-area").scrollTop <= 5 && !modelData.destIdMap[this.chatPerson.destId].scrollEnd) {
+        vm.showMore()
+    }
+}
 let vm = new Vue({
     el: '#app',
     data: modelData,
@@ -63,12 +66,7 @@ let vm = new Vue({
         this.init();
     },
     methods: {
-        scrollEvent: function (event) {
-            if (event.srcElement.scrollTop <= 10 && !modelData.scrollEnd) {
-                let conversation = {'destId': this.chatPerson.destId, 'msgId': modelData.messages[0].msgId}
-                this.showHistoryMessage(conversation);
-            }
-        },
+        scrollEvent: lodash.debounce(loadMoreData, 500),
         sendMsg: function (event) {
             event.preventDefault()
             let content = ''
@@ -139,7 +137,9 @@ let vm = new Vue({
                 if (!modelData.is_fresh) {
                     for (let i in res) {
                         let c = res[i]
-                        modelData.destId2Message[c.destId] = []
+                        let m = modelData.destIdMap[c.destId] = {}
+                        m.messages = []
+                        m.scrollEnd = false
                     }
                     vm.$nextTick(function () {
                         this.showHistoryMessageByClick(modelData.conversations[0])
@@ -152,7 +152,7 @@ let vm = new Vue({
             this.chatPerson.destId = conversation.destId;
             this.chatPerson.imgUrl = conversation.imgUrl;
             this.chatPerson.nickname = conversation.nickname;
-            if (modelData.destId2Message[conversation.destId].length == 0) {
+            if (modelData.destIdMap[conversation.destId].messages.length == 0) {
                 let path = '/user/historymessage/' + sharedObject.userId + '/' + conversation.destId + '/' + conversation.msgId + '/' + modelData.pageSize + '?' + 'direct=-2'
                 $.get({
                     url: sharedObject.url + path,
@@ -160,18 +160,22 @@ let vm = new Vue({
                     headers: header
                 }).done(function (res) {
                     if (res == null || res == []) {
-                        modelData.scrollEnd = true
+                        modelData.destIdMap[conversation.destId].messages.scrollEnd = true
                     } else {
-                        modelData.messages = modelData.destId2Message[conversation.destId] = res.reverse()
+                        modelData.messages = modelData.destIdMap[conversation.destId].messages = res.reverse()
                     }
                     vm.scrollToEnd()
                 })
             }
             else {
-                modelData.messages = this.destId2Message[conversation.destId]
+                modelData.messages = this.destIdMap[conversation.destId].messages
             }
             vm.scrollToEnd()
             modelData.unReadMsgCnt[conversation.destId] = 0
+        },
+        showMore: function(){
+            let conversation = {'destId': this.chatPerson.destId, 'msgId': modelData.messages[0].msgId}
+            this.showHistoryMessage(conversation);
         },
         showHistoryMessage: function (conversation) {
             let path = '/user/historymessage/' + sharedObject.userId + '/' + conversation.destId + '/' + conversation.msgId + '/' + modelData.pageSize + '?' + 'direct=-1'
@@ -180,13 +184,13 @@ let vm = new Vue({
                 timeout: sharedObject.timeout,
                 headers: header
             }).done(function (res) {
-                if (res == null || res == []) {
-                    modelData.scrollEnd = true
+                if (res == null || res.length==0) {
+                    modelData.destIdMap[conversation.destId].scrollEnd = true
                 } else {
                     let r = res.reverse()
-                    modelData.destId2Message[conversation.destId] = r.concat(modelData.destId2Message[conversation.destId])
+                    modelData.destIdMap[conversation.destId].messages = r.concat(modelData.destIdMap[conversation.destId].messages)
                 }
-                modelData.messages = modelData.destId2Message[conversation.destId]
+                modelData.messages = modelData.destIdMap[conversation.destId].messages
             })
         },
         scrollToEnd: function () {
@@ -371,47 +375,28 @@ client.on('data', function (bytes) {
         "msgType": chat.getDatatype()
 
     }
-    modelData.destId2Message[m.sendId].push(m)
+    modelData.destIdMap[m.sendId].messages.push(m)
     vm.scrollToEnd()
     vm.getConversations()
     vm.unReadMsgCount(m.sendId)
     vm.flash()
 
 })
-let reconnet_count = 0
+
+let reconnect_time = 5
 client.on('close', function () {
-    reconnet_count--
-    if (reconnet_count <= 0)
+    if(--reconnect_time == 0)
         return
     console.log("connection closed")
-    client.connect(sharedObject.tcpport, sharedObject.host, function () {
-        console.log("断线后重连")
-        let message = new messages.ProtocolMessage()
-        let req = new messages.ProtocolMessage.TRequest()
-        req.setReqtype(messages.ProtocolMessage.RequestType.LOGIN)
-        let clogin = new messages.CLogin()
-        clogin.setMsgid(uuid.v1())
-        clogin.setUserid(sharedObject.username)
-        clogin.setPwd(sharedObject.pwd)
-        clogin.setDevicetype(messages.CLogin.DeviceType.WINDOWS)
-        clogin.setTs(new Date().getTime())
-        clogin.setVersion(1)
-        req.setLogin(clogin)
-        message.setRequest(req)
-        let bytes = message.serializeBinary()
-        client.write(Buffer.from(bytes))
-    })
+    setTimeout(function () {
+        client.connect(sharedObject.tcpport, sharedObject.host, function () {
+            console.log("断线后重连")
+            let bytes = msgBuilder.loginMessage(sharedObject.username, sharedObject.pwd)
+            client.write(bytes)
+        })
+    }, 5000)
 })
-let conn = sharedObject.webSocket
 
-conn.onopen = function () {
-    console.log("Connected to the signaling server");
-    let msg = {
-        'type':'login',
-        'name': sharedObject.userId,
-    }
-    conn.send(JSON.stringify(msg))
-};
 
 let leftWidth = 60, median = 252, topHeight = 60, bottomHeight = 130
 
@@ -419,11 +404,11 @@ $(function () {
     $(".left, .median, .right").height($(window).height()-1)
 })
 
-window.onresize = function () {
+window.onresize = lodash.debounce(function () {
     $(".left, .median, .right").height($(window).height()-1);
     $(".right").width($(window).width() - leftWidth - median-1 );
     $(".chat-area").height($(window).height() - topHeight - bottomHeight-1)
-}
+}, 50)
 
 
 

@@ -112,9 +112,16 @@
             <div class="chat-person">
                 <span>{{chatPerson.nickname}}</span>
             </div>
-            <div class="chat-area" id="chat-area" @scroll="scrollEvent">
+            <div class="chat-area" id="chat-area" @scroll.passive="scrollEvent">
                 <ul>
-                    <li v-for="message in messages">
+                    <li v-for="(message,index) in messages">
+                        <div v-if="index==0" class="more-info">
+                            <span @click="showMore">查看更多消息</span>
+                        </div>
+                        <div v-if="index%20 == 0" class="oldest-time-area">
+                            <a href="oldest-time"></a>
+                            <span class="oldest-time">{{message.createtime}}</span>
+                        </div>
                         <div v-if="message.sendId==user.userId">
                             <a class="myself"><img v-bind:src="user.imgUrl"></a>
                             <div v-if="message.msgType==3">

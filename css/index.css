@@ -182,9 +182,27 @@
     height:360px;
     overflow: scroll;
 }
+.chat-area .more-info span{
+    color: #2C90FC;
+    font-size: 0.7em;
+    cursor: pointer;
+}
+.chat-area .more-info{
+    text-align: center;
+}
 .chat-area li{
     padding-top: 4px;
     padding-bottom: 4px;
+}
+.chat-area .oldest-time-area{
+    text-align: center;
+    padding:15px 0 10px 0;
+}
+.chat-area .oldest-time-area .oldest-time{
+    background-color: #DADADA;
+    padding: 5px 8px;
+    color: #FFFFFF;
+    font-size: 0.9em;
 }
 .clear{
     clear:both;
