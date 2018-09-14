@@ -13,7 +13,9 @@
     <div class="content">
         <div class="form">
             <div class="row">
-                <input class="" type="text" placeholder="用户名" v-model="userId">
+                <select v-model="userId" class="">
+                    <option v-for="option in options" v-bind:value="option.value">{{option.text}}</option>
+                </select>
             </div>
             <div class="row">
                 <input class="" type="password" placeholder="密码" v-model="pwd">

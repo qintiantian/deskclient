@@ -149,7 +149,7 @@
                     </div>
                     <div rows="4" class="content" v-on:keydown.enter="sendMsg">
                         <div class="img-area"></div>
-                        <textarea rows="3"></textarea>
+                        <textarea v-model="sendMessage" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="">

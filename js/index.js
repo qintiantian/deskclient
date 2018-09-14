@@ -46,7 +46,8 @@ const modelData = {
         'imgUrl': '',
         'remark':''
     },
-    btn:''
+    btn:'',
+    sendMessage:''//发送的消息
 };
 
 let header = {
@@ -88,11 +89,12 @@ let vm = new Vue({
                     msgType = message_pb.CPrivateChat.DataType.IMG
                 }
             }else{
-                content = $('.content textarea').val()
+                if(!this.sendMessage)
+                    return
                 let chatMsg = {
                     userId: this.user.userId,
                     destId: this.chatPerson.destId,
-                    content: content,
+                    content: this.sendMessage,
                     dataType: message_pb.CPrivateChat.DataType.TXT
                 }
                 let bytes = msgBuilder.chatMessage(chatMsg)
@@ -102,12 +104,12 @@ let vm = new Vue({
                 "msgId": this.chatPerson.msgId,
                 "sendId": this.user.userId,
                 "destId": this.chatPerson.destId,
-                "content": content,
+                "content": this.sendMessage,
                 "createtime": new Date(),
                 "msgType": msgType
             }
             modelData.messages.push(m)
-            $('.content textarea').val('')
+            this.sendMessage = ''
             $('.img-area').empty()
             this.getConversations()
             this.scrollToEnd()
