@@ -106,7 +106,10 @@ let vm = new Vue({
                 "createtime": new Date(),
                 "msgType": msgType
             }
-            modelData.messages.push(m)
+            if(m.msgType == message_pb.CPrivateChat.DataType.IMG){
+            }else{
+                modelData.messages.push(m)
+            }
             this.sendMessage = ''
             $('.img-area').empty()
             this.getConversations()
@@ -141,9 +144,7 @@ let vm = new Vue({
                         m.messages = []
                         m.scrollEnd = false
                     }
-                    vm.$nextTick(function () {
-                        this.showHistoryMessageByClick(modelData.conversations[0])
-                    })
+                    vm.showHistoryMessageByClick(modelData.conversations[0])
                     modelData.is_fresh = true
                 }
             })
@@ -195,6 +196,7 @@ let vm = new Vue({
         },
         scrollToEnd: function () {
             vm.$nextTick(function () {
+                // console.log($('.chat-area')[0].scrollHeight)
                 $('.chat-area')[0].scrollTop = $('.chat-area')[0].scrollHeight;   //这样就能将事件执行在界面渲染之后啦
             })
         },
@@ -352,7 +354,6 @@ let vm = new Vue({
 
 client.on('data', function (bytes) {
     let message = message_pb.ProtocolMessage.deserializeBinary(bytes)
-    console.log(message)
     let response = message.getResponse()
     if (response.getResptype() == message_pb.ProtocolMessage.RequestType.LOGIN) {
         let resp = response.getResp();
@@ -375,7 +376,8 @@ client.on('data', function (bytes) {
         "msgType": chat.getDatatype()
 
     }
-    modelData.destIdMap[m.sendId].messages.push(m)
+    let destId = m.sendId == modelData.user.userId ? m.destId : m.sendId
+    modelData.destIdMap[destId].messages.push(m)
     vm.scrollToEnd()
     vm.getConversations()
     vm.unReadMsgCount(m.sendId)
@@ -385,6 +387,7 @@ client.on('data', function (bytes) {
 
 let reconnect_time = 5
 client.on('close', function () {
+    console.log('断线了')
     if(--reconnect_time == 0)
         return
     console.log("connection closed")
