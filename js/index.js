@@ -65,15 +65,22 @@ let vm = new Vue({
     created() {
         this.init();
     },
+    computed: {
+    },
     methods: {
         scrollEvent: lodash.debounce(loadMoreData, 500),
-        sendMsg: function (event) {
-            event.preventDefault()
+        clearMsg: function() {
+          if(!this.sendMessage && this.filepaths.length>0){
+              this.filepaths.pop()
+
+          }
+        },
+        sendMsg: function () {
             let content = ''
             let msgType = 0
             if($('.img-area img').length > 0) {
                 for(let i in modelData.filepaths) {
-                    let filepath = modelData.filepaths[i]
+                    let filepath = modelData.shift()
                     let data = fs.readFileSync(filepath,'binary')
                     let chatMsg = {
                         userId: this.user.userId,
@@ -111,7 +118,6 @@ let vm = new Vue({
                 modelData.messages.push(m)
             }
             this.sendMessage = ''
-            $('.img-area').empty()
             this.getConversations()
             this.scrollToEnd()
         },
@@ -150,6 +156,8 @@ let vm = new Vue({
             })
         },
         showHistoryMessageByClick: function (conversation) {
+            this.sendMessage = ''
+            document.getElementById('sendArea').focus()
             this.chatPerson.destId = conversation.destId;
             this.chatPerson.imgUrl = conversation.imgUrl;
             this.chatPerson.nickname = conversation.nickname;
@@ -333,11 +341,12 @@ let vm = new Vue({
                 properties: ['openFile', 'multiSelections']
             }, function (filePaths) {
                 if(filePaths) {
-                    for(let i in filePaths)
-                        $('.img-area').append("<img class='send-img' src='"+filePaths[i]+"'>")
+                    // for(let i in filePaths)
+                    //     $('.img-area').append("<img class='send-img' src='"+filePaths[i]+"'>")
                     console.log(filePaths)
-                    modelData.filepaths = filePaths
+                    modelData.filepaths = modelData.filepaths.concat(filePaths)
                 }
+                document.getElementById('sendArea').focus()
             });
         },
         videoChat: function() {

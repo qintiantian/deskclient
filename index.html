@@ -52,7 +52,14 @@
                         <span>
                             <span class="nickname">{{conversation.nickname}}</span>
                             <span class="last-date">{{conversation.lastDate}}</span>
-                            <span class="last-msg">{{conversation.lastMsg}}</span>
+                            <span class="last-msg">
+                                <template v-if="conversation.msgType == 0">
+                                    {{conversation.lastMsg}}
+                                </template>
+                                <template v-else>
+                                    [图片]
+                                </template>
+                            </span>
                         </span>
                     </div>
                 </li>
@@ -122,19 +129,19 @@
                             <a href="oldest-time"></a>
                             <span class="oldest-time">{{message.createtime}}</span>
                         </div>
-                        <div v-if="message.sendId==user.userId">
+                        <div class="img-msg" v-if="message.sendId==user.userId">
                             <a class="myself"><img v-bind:src="user.imgUrl"></a>
                             <div v-if="message.msgType==3">
-                                <a><img :src="sharedObject.imgUrl+'/'+message.content" class="myself-content"></a>
+                                <a class="myself-content"><img :src="sharedObject.imgUrl+'/'+message.content" class=""></a>
                             </div>
                             <div v-if="message.msgType==0">
                                 <span class="myself">{{message.content}}</span>
                             </div>
                         </div>
-                        <div v-else>
+                        <div class="img-msg" v-else>
                             <a class="other-person"><img v-bind:src="chatPerson.imgUrl"></a>
                             <div v-if="message.msgType==3">
-                                <a><img :src="sharedObject.imgUrl+'/'+message.content" class="other-person-content"></a>
+                                <a class="other-person-content"><img :src="sharedObject.imgUrl+'/'+message.content" class=""></a>
                             </div>
                             <div v-if="message.msgType==0">
                                 <span class="other-person">{{message.content}}</span>
@@ -154,9 +161,15 @@
                             <img @click="videoChat" src="./imgs/video.png">
                         </span>
                     </div>
-                    <div rows="4" class="content" v-on:keydown.enter="sendMsg">
-                        <div class="img-area"></div>
-                        <textarea v-model="sendMessage" rows="3"></textarea>
+                    <div class="content" @keydown.delete="clearMsg" v-on:keydown.enter.prevent="sendMsg">
+                        <div class="img-area">
+                            <ul>
+                                <li v-for="filepath in filepaths">
+                                    <img :src="filepath">
+                                </li>
+                            </ul>
+                        </div>
+                        <textarea id="sendArea" v-model="sendMessage"></textarea>
                     </div>
                 </div>
                 <div class="">

@@ -67,8 +67,8 @@ app.on('activate', () => {
     }
 })
 
-// let host='39.106.133.40'
-let host='localhost'
+let host='39.106.133.40'
+// let host='localhost'
 let tcpport='8090'
 let client = new net.Socket()
 client.connect(tcpport, host, function () {
@@ -83,7 +83,7 @@ global.sharedObject = {
     imgUrl:'http://39.106.133.40',
     host:host,
     tcpport:tcpport,
-    timeout:10000,
+    timeout:5000,
     username:'',
     pwd:'',
     chatPerson:{}
