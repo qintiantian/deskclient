@@ -23,6 +23,7 @@ const modelData = {
     },
     conversations: [],
     messages: [],
+    showMoreFlag: true,
     pageSize: 30,
     unReadMsgCnt: {},
     destIdMap:{},
@@ -76,11 +77,9 @@ let vm = new Vue({
           }
         },
         sendMsg: function () {
-            let content = ''
-            let msgType = 0
             if($('.img-area img').length > 0) {
                 for(let i in modelData.filepaths) {
-                    let filepath = modelData.shift()
+                    let filepath = modelData.filepaths.shift()
                     let data = fs.readFileSync(filepath,'binary')
                     let chatMsg = {
                         userId: this.user.userId,
@@ -91,20 +90,18 @@ let vm = new Vue({
                     }
                     let bytes = msgBuilder.chatMessage(chatMsg)
                     client.write(bytes)
-                    msgType = message_pb.CPrivateChat.DataType.IMG
                 }
-            }else{
-                if(!this.sendMessage)
-                    return
-                let chatMsg = {
-                    userId: this.user.userId,
-                    destId: this.chatPerson.destId,
-                    content: this.sendMessage,
-                    dataType: message_pb.CPrivateChat.DataType.TXT
-                }
-                let bytes = msgBuilder.chatMessage(chatMsg)
-                client.write(bytes)
             }
+            if(!this.sendMessage)
+                return
+            let chatMsg = {
+                userId: this.user.userId,
+                destId: this.chatPerson.destId,
+                content: this.sendMessage,
+                dataType: message_pb.CPrivateChat.DataType.TXT
+            }
+            let bytes = msgBuilder.chatMessage(chatMsg)
+            client.write(bytes)
             this.sendMessage = ''
         },
         getUserProfile: function () {
@@ -136,13 +133,14 @@ let vm = new Vue({
                         m.messages = []
                         m.scrollEnd = false
                     }
-                    // vm.showHistoryMessageByClick(modelData.conversations[0])
+                    vm.showHistoryMessageByClick(modelData.conversations[0])
                     modelData.is_fresh = true
                 }
             })
         },
         showHistoryMessageByClick: function (conversation) {
             this.sendMessage = ''
+            modelData.showMoreFlag = !modelData.destIdMap[conversation.destId].scrollEnd
             document.getElementById('sendArea').focus()
             this.chatPerson.destId = conversation.destId;
             this.chatPerson.imgUrl = conversation.imgUrl;
@@ -173,6 +171,7 @@ let vm = new Vue({
             this.showHistoryMessage(conversation);
         },
         showHistoryMessage: function (conversation) {
+            modelData.showMoreFlag = !modelData.destIdMap[conversation.destId].scrollEnd
             let path = '/user/historymessage/' + sharedObject.userId + '/' + conversation.destId + '/' + conversation.msgId + '/' + modelData.pageSize + '?' + 'direct=-1'
             $.get({
                 url: sharedObject.url + path,
@@ -184,8 +183,9 @@ let vm = new Vue({
                 } else {
                     let r = res.reverse()
                     modelData.destIdMap[conversation.destId].messages = r.concat(modelData.destIdMap[conversation.destId].messages)
+                    modelData.messages = modelData.destIdMap[conversation.destId].messages
                 }
-                modelData.messages = modelData.destIdMap[conversation.destId].messages
+                modelData.showMoreFlag = !modelData.destIdMap[conversation.destId].scrollEnd
             })
         },
         scrollToEnd: function () {
@@ -374,11 +374,13 @@ client.on('data', function (bytes) {
     let sendToMe = m.sendId != modelData.user.userId  //是否是别人发给我的消息
     let destId =sendToMe ? m.sendId : m.destId
     modelData.destIdMap[destId].messages.push(m)
-    vm.scrollToEnd()
     vm.getConversations()
-    vm.unReadMsgCount(m.sendId)
     if(sendToMe)
+        vm.unReadMsgCount(m.sendId)
+    vm.scrollToEnd()
+    if(sendToMe) {
         vm.flash()
+    }
 
 })
 
