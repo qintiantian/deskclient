@@ -327,9 +327,6 @@ let vm = new Vue({
                 properties: ['openFile', 'multiSelections']
             }, function (filePaths) {
                 if(filePaths) {
-                    // for(let i in filePaths)
-                    //     $('.img-area').append("<img class='send-img' src='"+filePaths[i]+"'>")
-                    console.log(filePaths)
                     modelData.filepaths = modelData.filepaths.concat(filePaths)
                 }
                 document.getElementById('sendArea').focus()
@@ -375,10 +372,9 @@ client.on('data', function (bytes) {
     let destId =sendToMe ? m.sendId : m.destId
     modelData.destIdMap[destId].messages.push(m)
     vm.getConversations()
-    if(sendToMe)
-        vm.unReadMsgCount(m.sendId)
     vm.scrollToEnd()
     if(sendToMe) {
+        vm.unReadMsgCount(m.sendId)
         vm.flash()
     }
 
