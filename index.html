@@ -39,7 +39,7 @@
         <!--会话列表-->
         <div class="conversations" v-show="isShow">
             <ul>
-                <li v-for="(conversation) in conversations" v-on:click="showHistoryMessageByClick(conversation)"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
+                <li v-for="(conversation) in conversations" @click="showHistoryMessageByClick(conversation)"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
                     <div >
                         <input type="hidden" value="{{conversation.destId}}">
                         <input type="hidden" value="{{conversation.msgId}}">
@@ -122,7 +122,7 @@
             <div class="chat-area" id="chat-area" @scroll.passive="scrollEvent">
                 <ul>
                     <li v-for="(message,index) in messages">
-                        <div v-if="index==0" class="more-info">
+                        <div v-if="index==0 && destIdMap[message.destId] && !destIdMap[message.destId].scrollEnd" class="more-info">
                             <span @click="showMore">查看更多消息</span>
                         </div>
                         <div v-if="index%20 == 0" class="oldest-time-area">

@@ -2,7 +2,7 @@ const Vue = require('./js/vue')
 const message_pb = require("./js/message_pb")
 const $ = require('jquery')
 const uuid = require('uuid')
-const {ipcRenderer, remote, shell} = require('electron')
+const {ipcRenderer, remote, shell, desktopCapturer} = require('electron')
 const os = require('os')
 const fs = require('fs')
 const msgBuilder = require('./js/message_builder')
@@ -105,21 +105,7 @@ let vm = new Vue({
                 let bytes = msgBuilder.chatMessage(chatMsg)
                 client.write(bytes)
             }
-            let m = {
-                "msgId": this.chatPerson.msgId,
-                "sendId": this.user.userId,
-                "destId": this.chatPerson.destId,
-                "content": this.sendMessage,
-                "createtime": new Date(),
-                "msgType": msgType
-            }
-            if(m.msgType == message_pb.CPrivateChat.DataType.IMG){
-            }else{
-                modelData.messages.push(m)
-            }
             this.sendMessage = ''
-            this.getConversations()
-            this.scrollToEnd()
         },
         getUserProfile: function () {
             let path = '/user/profile/' + sharedObject.userId + '/' + sharedObject.certificate
@@ -150,7 +136,7 @@ let vm = new Vue({
                         m.messages = []
                         m.scrollEnd = false
                     }
-                    vm.showHistoryMessageByClick(modelData.conversations[0])
+                    // vm.showHistoryMessageByClick(modelData.conversations[0])
                     modelData.is_fresh = true
                 }
             })
@@ -172,15 +158,15 @@ let vm = new Vue({
                         modelData.destIdMap[conversation.destId].messages.scrollEnd = true
                     } else {
                         modelData.messages = modelData.destIdMap[conversation.destId].messages = res.reverse()
+                        vm.scrollToEnd()
                     }
-                    vm.scrollToEnd()
                 })
             }
             else {
                 modelData.messages = this.destIdMap[conversation.destId].messages
+                vm.scrollToEnd()
+                modelData.unReadMsgCnt[conversation.destId] = 0
             }
-            vm.scrollToEnd()
-            modelData.unReadMsgCnt[conversation.destId] = 0
         },
         showMore: function(){
             let conversation = {'destId': this.chatPerson.destId, 'msgId': modelData.messages[0].msgId}
@@ -385,12 +371,14 @@ client.on('data', function (bytes) {
         "msgType": chat.getDatatype()
 
     }
-    let destId = m.sendId == modelData.user.userId ? m.destId : m.sendId
+    let sendToMe = m.sendId != modelData.user.userId  //是否是别人发给我的消息
+    let destId =sendToMe ? m.sendId : m.destId
     modelData.destIdMap[destId].messages.push(m)
     vm.scrollToEnd()
     vm.getConversations()
     vm.unReadMsgCount(m.sendId)
-    vm.flash()
+    if(sendToMe)
+        vm.flash()
 
 })
 

@@ -209,13 +209,14 @@ span.other-person{
 a.myself-content, a.other-person-content{
     position: relative;
 }
-.myself-content{
-    margin-right: 10px;
-    max-width: 50%;
+a.myself-content{
+    margin-right:10px
 }
-.other-person-content{
+a.other-person-content{
     margin-left: 10px;
-    max-width: 50%;
+}
+a.myself-content img, a.other-person-content img{
+    max-width: 250px
 }
 span.myself:after, a.myself-content:after, span.other-person:before, a.other-person-content:before{
     width:0;

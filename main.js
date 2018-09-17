@@ -4,11 +4,11 @@ const net =  require('net')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win=[]
+let win={}
 
 ipcMain.on('index-show', function () {
-    win[1] = new BrowserWindow({width:850, height: 600, autoHideMenuBar: true, backgroundColor:'#F5F5F5'})
-    let indexWin = win[1]
+    win.mainWin = new BrowserWindow({width:850, height: 600, autoHideMenuBar: true, backgroundColor:'#F5F5F5'})
+    let indexWin = win.mainWin
     indexWin.setMinimumSize(720,500)
     indexWin.setTitle('')
     indexWin.loadFile('index.html')
@@ -17,12 +17,12 @@ ipcMain.on('index-show', function () {
         client.destroy()
         win[1] = null
     })
-     win[0].close()
+     win.loginWin.close()
 })
 
 ipcMain.on('video-chat', function(event, data) {
     let v = new BrowserWindow({width:600,height:500,autoHideMenuBar: true})
-    win.push(v)
+    win.videoChatWin = v
     v.loadFile('video-chat.html')
     // v.loadFile('client.html')
     v.webContents.openDevTools()
@@ -31,17 +31,17 @@ ipcMain.on('video-chat', function(event, data) {
 
 function createWindow () {
     // 创建浏览器窗口。850 600
-    win[0] = new BrowserWindow({width: 290, height: 410, autoHideMenuBar : true, backgroundColor:'#F5F5F5'})
-    let mainWin = win[0]
+    win.loginWin = new BrowserWindow({width: 290, height: 410, autoHideMenuBar : true, backgroundColor:'#F5F5F5'})
+    let loginWin = win.loginWin
     // 然后加载应用的 index.html。
-    mainWin.loadFile('login.html')
+    loginWin.loadFile('login.html')
 
     // 打开开发者工具
     // mainWin.webContents.openDevTools()
 
     // 当 window 被关闭，这个事件会被触发。
-    mainWin.on('closed', () => {
-        win[0] = null
+    loginWin.on('closed', () => {
+        win.loginWin = null
     })
 }
 
