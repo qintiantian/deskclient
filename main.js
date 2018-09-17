@@ -1,4 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
+const electron = require('electron')
 const path = require('path')
 const net =  require('net')
 
@@ -27,6 +28,39 @@ ipcMain.on('video-chat', function(event, data) {
     // v.loadFile('client.html')
     v.webContents.openDevTools()
     v.webContents.send('info', 'aaa')
+})
+
+ipcMain.on('image-enlarge', function(event, data){
+    /*win.imageEnlargeWin = new BrowserWindow({width: data.width+20, height: data.height+82, minWidth: 350, minHeight: 385,
+        maxWidth: 930, maxHeight: 662, autoHideMenuBar: true, center: true, minimizable: false, maximizable: false})*/
+    let naturalWidth = data.width
+    let naturalHeight = data.height
+    let iwidth = electron.screen.getPrimaryDisplay().workAreaSize.width;//屏幕宽度
+    let minwidth = 340; //图片最小宽度
+    var minheight = 390 //图片最小高度
+    let maxwidth = 830;//图片最大宽度
+    let boarderheight = 60 //底部高度+边框高度
+    let width, height;
+    if(naturalWidth > iwidth){
+        width =  maxwidth;
+        height = (naturalHeight * maxwidth) / naturalWidth + boarderheight;
+    } else {
+        if(naturalWidth < minwidth){
+            width = minwidth
+            height = minheight + boarderheight
+        } else {
+            width = naturalWidth
+            height = naturalHeight + boarderheight
+        }
+    }
+    win.imageEnlargeWin = new BrowserWindow({width: width, height: height, autoHideMenuBar: true, center: true})
+    let imgV = win.imageEnlargeWin;
+    imgV.setTitle('')
+    imgV.loadFile('image-enlarge.html')
+    imgV.webContents.openDevTools()
+    imgV.webContents.on('did-finish-load', function () {
+        imgV.webContents.send('image-src', data)
+    })
 })
 
 function createWindow () {

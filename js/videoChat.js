@@ -23,7 +23,7 @@ function send(message) {
 };
 
 //connecting to our signaling server
-let conn =  new WebSocket("ws://localhost:3000")
+let conn =  new WebSocket("ws://39.106.133.40:3000")
 conn.onopen = function() {
     console.log("Connected to the signaling server");
     let msg = {

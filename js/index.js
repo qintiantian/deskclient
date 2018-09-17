@@ -336,6 +336,15 @@ let vm = new Vue({
             sharedObject.chatPerson =  this.chatPerson
             ipcRenderer.send('video-chat', this.chatPerson.destId)
         },
+        imageEnlarge: function(event) {
+            //获取原始尺寸
+            let image = new Image()
+            image.src = event.target.src
+            let naturalWidth = image.width
+            let naturalHeight = image.height
+            let data = {width: naturalWidth, height: naturalHeight, src: event.target.src}
+            ipcRenderer.send('image-enlarge', data)
+        },
         init: function () {
             this.getUserProfile()
             this.getConversations()
@@ -375,7 +384,7 @@ client.on('data', function (bytes) {
     vm.scrollToEnd()
     if(sendToMe) {
         vm.unReadMsgCount(m.sendId)
-        vm.flash()
+        //vm.flash()
     }
 
 })
