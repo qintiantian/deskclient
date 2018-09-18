@@ -205,13 +205,13 @@
 }
 
 .chat-area{
-    height:300px;
-    overflow: scroll;
+    height:310px;
+    overflow-y: scroll;
     font-size:14px;
 }
 .chat-area .more-info span{
     color: #2C90FC;
-    font-size: 0.7em;
+    font-size: 0.8em;
     cursor: pointer;
 }
 .chat-area .more-info{
@@ -223,13 +223,13 @@
 }
 .chat-area .oldest-time-area{
     text-align: center;
-    padding:15px 0 10px 0;
+    padding-bottom: 10px;
 }
 .chat-area .oldest-time-area .oldest-time{
     background-color: #DADADA;
     padding: 3px 5px;
     color: #FFFFFF;
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 .clear{
     clear:both;
@@ -289,7 +289,7 @@ span.myself, span.other-person{
 }
 .send-area{
     background-color: #ffffff;
-    height: 140px;
+    height: 130px;
     position: relative;
 
 }
@@ -313,8 +313,7 @@ span.myself, span.other-person{
     width:100%;
     height: 80%;
     resize: none;
-    font-weight: bold;
-    /*font-size:1em;*/
+    font-size:14px;
 }
 .content .img-area li img{
 }
@@ -322,7 +321,7 @@ span.myself, span.other-person{
     display: inline;
 }
 .send-btn{
-    padding:8px;
+    padding:5px 8px;
     position:absolute;
     bottom: 10px;
     right:25px;
@@ -330,7 +329,7 @@ span.myself, span.other-person{
     background-color: #F5F5F5;
 }
 .send-btn span{
-    font-size: 14px;
+    font-size: 13px;
 }
 .send-btn:hover{
     background-color: #129611;

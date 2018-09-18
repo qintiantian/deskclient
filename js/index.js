@@ -419,7 +419,7 @@ client.on('data', function (bytes) {
     vm.scrollToEnd()
     if(sendToMe) {
         vm.unReadMsgCount(m.sendId)
-        //vm.flash()
+        vm.flash()
     }
 
 })
@@ -440,7 +440,7 @@ client.on('close', function () {
 })
 
 
-let leftWidth = 60, median = 230, topHeight = 60, bottomHeight = 140
+let leftWidth = 60, median = 230, topHeight = 60, bottomHeight = 130
 
 $(function () {
     $(".right").width($(window).width() - leftWidth - median-1);

@@ -133,8 +133,10 @@
                         <div v-if="index==0" class="more-info" v-show="showMoreFlag">
                             <span @click="showMore">查看更多消息</span>
                         </div>
+                        <div v-if="index==0" class="oldest-time-area">
+                            <span class="oldest-time">{{formatDate(index)}}</span>
+                        </div>
                         <div v-if="index>0 && messages[index].createtime-messages[index-1].createtime > internalMills" class="oldest-time-area">
-                            <a href="oldest-time"></a>
                             <span class="oldest-time">{{formatDate(index)}}</span>
                         </div>
                         <div class="img-msg" v-if="message.sendId==user.userId">
