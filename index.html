@@ -10,6 +10,7 @@
 </head>
 <body>
 <div id="app" class="container">
+
     <!--左侧导航-->
     <nav-left v-bind:user="user" v-bind:isfloat="isFloat" v-bind:isShow="isShow" v-bind:isShow2="isShow2" v-on:change-show="updateShow" v-on:show-user="showUserDtl"></nav-left>
     <div class="bomb-box" v-show="isFloat">
@@ -34,7 +35,7 @@
         <div class="search">
             <i class="fa fa-search"></i>
             <input class="" id="search-input" type="text" placeholder=""/>
-            <img src="imgs/add.png" class="add-friend">
+            <span class="add-friend">+</span>
         </div>
         <!--会话列表-->
         <div class="conversations" v-show="isShow">
@@ -116,8 +117,15 @@
         <!--聊天窗口-->
         <div v-show="isShow">
             <div class="separator"></div>
-            <div class="chat-person">
+            <div class="chat-person drag">
                 <span>{{chatPerson.nickname}}</span>
+                <div class="fun-area non-drag">
+                    <div>
+                        <span class="gray-bg" @click="minWin">-</span>
+                        <span class="gray-bg" @click="maxWin">□</span>
+                        <span class="red-bg" @click="closeWin">x</span>
+                    </div>
+                </div>
             </div>
             <div class="chat-area" id="chat-area" @scroll.passive="scrollEvent">
                 <ul>
@@ -125,9 +133,9 @@
                         <div v-if="index==0" class="more-info" v-show="showMoreFlag">
                             <span @click="showMore">查看更多消息</span>
                         </div>
-                        <div v-if="index%20 == 0" class="oldest-time-area">
+                        <div v-if="index>0 && messages[index].createtime-messages[index-1].createtime > internalMills" class="oldest-time-area">
                             <a href="oldest-time"></a>
-                            <span class="oldest-time">{{message.createtime}}</span>
+                            <span class="oldest-time">{{formatDate(index)}}</span>
                         </div>
                         <div class="img-msg" v-if="message.sendId==user.userId">
                             <a class="myself"><img v-bind:src="user.imgUrl"></a>

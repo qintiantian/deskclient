@@ -7,6 +7,7 @@ const os = require('os')
 const fs = require('fs')
 const msgBuilder = require('./js/message_builder')
 const lodash = require('lodash')
+const moment = require('moment')
 
 let sharedObject = remote.getGlobal("sharedObject")
 let client = sharedObject.client
@@ -25,6 +26,7 @@ const modelData = {
     messages: [],
     showMoreFlag: true,
     pageSize: 30,
+    internalMills: 5*60*1000,
     unReadMsgCnt: {},
     destIdMap:{},
     is_fresh: false,
@@ -70,6 +72,21 @@ let vm = new Vue({
     },
     methods: {
         scrollEvent: lodash.debounce(loadMoreData, 500),
+        closeWin:function(){
+            console.log('closeWin')
+            let curWin = remote.getCurrentWindow()
+            curWin.close()
+        },
+        maxWin: function() {
+            console.log('maxWin')
+            let curWin = remote.getCurrentWindow()
+            curWin.isMaximized() ? curWin.unmaximize() : curWin.maximize()
+        },
+        minWin: function() {
+            console.log('minWin')
+            let curWin = remote.getCurrentWindow()
+            curWin.isMinimized() ? curWin.restore() : curWin.minimize()
+        },
         clearMsg: function() {
           if(!this.sendMessage && this.filepaths.length>0){
               this.filepaths.pop()
@@ -137,6 +154,24 @@ let vm = new Vue({
                     modelData.is_fresh = true
                 }
             })
+        },
+        formatDate: function(index) {
+            let c = this.messages[index].createtime
+            let curM = moment(c), copyM = moment(c)
+            let now = moment().startOf('d')
+            let diffNum = now.diff(copyM.startOf('d'), 'd')
+            let format
+            switch (diffNum) {
+                case 0:
+                    format = curM.format('HH:mm')
+                    break
+                case 1:
+                    format = '昨天 '+curM.format('HH:mm')
+                    break
+                default:
+                    format = curM.format('YYYY年MM月DD日 HH:mm')
+            }
+            return format
         },
         showHistoryMessageByClick: function (conversation) {
             this.sendMessage = ''
@@ -354,7 +389,7 @@ let vm = new Vue({
 })
 
 client.on('data', function (bytes) {
-    let message = message_pb.ProtocolMessage.deserializeBinary(bytes)
+    let message = message_pb.ProtocolMessage.deserializeBinary(bytes);
     let response = message.getResponse()
     if (response.getResptype() == message_pb.ProtocolMessage.RequestType.LOGIN) {
         let resp = response.getResp();
@@ -405,17 +440,18 @@ client.on('close', function () {
 })
 
 
-let leftWidth = 60, median = 252, topHeight = 60, bottomHeight = 130
+let leftWidth = 60, median = 230, topHeight = 60, bottomHeight = 140
 
 $(function () {
+    $(".right").width($(window).width() - leftWidth - median-1);
     $(".left, .median, .right").height($(window).height()-1)
 })
 
-window.onresize = lodash.debounce(function () {
+window.onresize = function () {
     $(".left, .median, .right").height($(window).height()-1);
-    $(".right").width($(window).width() - leftWidth - median-1 );
+    $(".right").width($(window).width() - leftWidth - median-1);
     $(".chat-area").height($(window).height() - topHeight - bottomHeight-1)
-}, 50)
+}
 
 
 

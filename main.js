@@ -8,7 +8,7 @@ const net =  require('net')
 let win={}
 
 ipcMain.on('index-show', function () {
-    win.mainWin = new BrowserWindow({width:850, height: 600, autoHideMenuBar: true, backgroundColor:'#F5F5F5'})
+    win.mainWin = new BrowserWindow({width:850, height: 550, autoHideMenuBar: true, titleBarStyle: 'hiddenInset', frame:false})
     let indexWin = win.mainWin
     indexWin.setMinimumSize(720,500)
     indexWin.setTitle('')
@@ -27,6 +27,11 @@ ipcMain.on('video-chat', function(event, data) {
     v.loadFile('video-chat.html')
     // v.loadFile('client.html')
     v.webContents.openDevTools()
+    if(data) {
+        v.webContents.on('did-finish-load', function () {
+            v.webContents.send('info', data)
+        })
+    }
     v.webContents.send('info', 'aaa')
 })
 
@@ -119,6 +124,5 @@ global.sharedObject = {
     tcpport:tcpport,
     timeout:5000,
     username:'',
-    pwd:'',
-    chatPerson:{}
+    pwd:''
 }

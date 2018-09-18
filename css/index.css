@@ -19,7 +19,12 @@
 .chat-person,.chat-area, .send-area{
     padding:0 20px;
 }
-
+.drag{
+     -webkit-app-region: drag;
+ }
+.non-drag{
+    -webkit-app-region: no-drag;
+}
 .container{
     width: 100%;
     overflow:hidden;
@@ -31,6 +36,7 @@
     text-align: center;
     position:relative;
 }
+
 .left ul li{
     margin-top:20px;
 }
@@ -49,7 +55,7 @@
     bottom: 10px;
 }
 .median{
-    width: 252px;
+    width: 230px;
     background-color: #EEEAE8;
 }
 .right{
@@ -60,13 +66,13 @@
 .separator{
     width:100%;
     position: absolute;
-    top:50px;
+    top:60px;
     border-bottom:solid 1px #e7e7e7;
 }
 
 .left, .median, .right{
     float: left;
-    height: 563px;
+    height: 503px;
 }
 .search{
     padding:20px 6px 6px 8px;
@@ -76,7 +82,7 @@
     width:200px;
     position: absolute;
     left: 15px;
-    top: 24px;
+    top: 27px;
     color:#636363;
     font-size:12px;
 }
@@ -86,12 +92,20 @@
     border:1px solid #DBDBDB;
     height: 20px;
     padding:2px;
-    width: 200px;
+    width: 170px;
 }
 .add-friend{
     width: 20px;
     vertical-align: middle;
     margin-left: 4px;
+    padding:1px 6px;
+    border-radius: 5px;
+    cursor:pointer;
+    font-size:1.2em;
+    background-color: #DCD9D8;
+}
+.add-friend:hover{
+    background-color: #D1D1D1;
 }
 .nickname{
     position: absolute;
@@ -157,7 +171,28 @@
     font-size: 1.2em;
     height: 60px;
     font-weight: bold;
-    line-height: 60px;
+    line-height: 70px;
+    position: relative;
+}
+.fun-area{
+    display: inline;
+    position: absolute;
+    right:0;
+    top:0;
+    z-index:10;
+    line-height: 5px;
+}
+.fun-area span{
+    padding: 10px;
+    cursor:pointer;
+    display: inline-block;
+}
+.fun-area .red-bg:hover{
+    background-color: #F45454;
+    color:#ffffff;
+}
+.fun-area .gray-bg:hover{
+    background-color: #E3E3E3;
 }
 .myself, .myself-content{
     float:right;
@@ -170,8 +205,9 @@
 }
 
 .chat-area{
-    height:360px;
+    height:300px;
     overflow: scroll;
+    font-size:14px;
 }
 .chat-area .more-info span{
     color: #2C90FC;
@@ -180,10 +216,10 @@
 }
 .chat-area .more-info{
     text-align: center;
+    padding-bottom: 10px;
 }
 .chat-area li{
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-bottom: 8px;
 }
 .chat-area .oldest-time-area{
     text-align: center;
@@ -191,9 +227,9 @@
 }
 .chat-area .oldest-time-area .oldest-time{
     background-color: #DADADA;
-    padding: 5px 8px;
+    padding: 3px 5px;
     color: #FFFFFF;
-    font-size: 0.9em;
+    font-size: 0.8em;
 }
 .clear{
     clear:both;
@@ -278,7 +314,7 @@ span.myself, span.other-person{
     height: 80%;
     resize: none;
     font-weight: bold;
-    font-size:1em;
+    /*font-size:1em;*/
 }
 .content .img-area li img{
 }

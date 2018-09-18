@@ -2,7 +2,7 @@ const {remote, ipcRenderer} = require('electron')
 
 let sharedObject = remote.getGlobal("sharedObject")
 var userId;
-var chatPerson = sharedObject.chatPerson;
+let destId;
 let connectedUser
 var yourConn;
 var localVideo = document.querySelector('#localVideo');
@@ -91,14 +91,15 @@ function handleLogin(success) {
         }, function (error) {
             console.log(error);
         });
+        // if(destId){
+        //     createOffer()
+        // }
     }
 }
 
-function createOffer(d) {
-    console.log('create offer to'+chatPerson.destId)
-    connectedUser = chatPerson.destId
-    if(d)
-        connectedUser = d
+function createOffer() {
+    console.log('create offer to'+destId)
+    connectedUser = destId
     yourConn.createOffer(function (offer) {
         send({
             type: "offer",
@@ -108,7 +109,6 @@ function createOffer(d) {
     }, function (error) {
         alert("Error when creating an offer");
     });
-
 }
 
 
