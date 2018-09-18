@@ -9,8 +9,8 @@ V.component('nav-left',{
     },
     template:
             `
-             <div class="left" id="nav-left">
-                <ul>
+             <div class="left drag" id="nav-left">
+                <ul class="non-drag">
                     <li>
                        <a @click="showUserDtl(isfloat)">
                             <img id="profile" v-bind:src="user.imgUrl">

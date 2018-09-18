@@ -24,7 +24,7 @@ const modelData = {
     },
     conversations: [],
     messages: [],
-    showMoreFlag: true,
+    showMoreFlag: true,//是否显示‘显示更多消息’的提示
     pageSize: 30,
     internalMills: 5*60*1000,
     unReadMsgCnt: {},
@@ -73,24 +73,26 @@ let vm = new Vue({
     methods: {
         scrollEvent: lodash.debounce(loadMoreData, 500),
         closeWin:function(){
-            console.log('closeWin')
             let curWin = remote.getCurrentWindow()
             curWin.close()
         },
         maxWin: function() {
-            console.log('maxWin')
             let curWin = remote.getCurrentWindow()
             curWin.isMaximized() ? curWin.unmaximize() : curWin.maximize()
         },
         minWin: function() {
-            console.log('minWin')
             let curWin = remote.getCurrentWindow()
             curWin.isMinimized() ? curWin.restore() : curWin.minimize()
+        },
+        showScrollBar: lodash.debounce(function() {
+            $('.chat-area').css('overflow-y', 'auto')
+        },500),
+        hideScrollBar: function() {
+          $('.chat-area').css('overflow','hidden')
         },
         clearMsg: function() {
           if(!this.sendMessage && this.filepaths.length>0){
               this.filepaths.pop()
-
           }
         },
         sendMsg: function () {
@@ -443,14 +445,16 @@ client.on('close', function () {
 let leftWidth = 60, median = 230, topHeight = 60, bottomHeight = 130
 
 $(function () {
-    $(".right").width($(window).width() - leftWidth - median-1);
-    $(".left, .median, .right").height($(window).height()-1)
+    resize()
 })
 
-window.onresize = function () {
-    $(".left, .median, .right").height($(window).height()-1);
-    $(".right").width($(window).width() - leftWidth - median-1);
-    $(".chat-area").height($(window).height() - topHeight - bottomHeight-1)
+window.onresize = lodash.debounce(function () {
+    resize()
+    $(".chat-area").height($(window).height() - topHeight - bottomHeight)
+}, 100)
+function resize(){
+    $(".right").width($(window).width() - leftWidth - median);
+    $(".left, .median, .right").height($(window).height())
 }
 
 

@@ -12,7 +12,8 @@
 <div id="app" class="container">
 
     <!--左侧导航-->
-    <nav-left v-bind:user="user" v-bind:isfloat="isFloat" v-bind:isShow="isShow" v-bind:isShow2="isShow2" v-on:change-show="updateShow" v-on:show-user="showUserDtl"></nav-left>
+    <nav-left v-bind:user="user" v-bind:isfloat="isFloat" v-bind:isShow="isShow" v-bind:isShow2="isShow2" v-on:change-show="updateShow" v-on:show-user="showUserDtl">
+    </nav-left>
     <div class="bomb-box" v-show="isFloat">
         <div class="bomb-box-content">
             <div>
@@ -31,14 +32,14 @@
             </div>
         </div>
     </div>
-    <div class="median" id="median">
+    <div class="median drag" id="median">
         <div class="search">
             <i class="fa fa-search"></i>
-            <input class="" id="search-input" type="text" placeholder=""/>
-            <span class="add-friend">+</span>
+            <input class="non-drag" id="search-input" type="text" placeholder=""/>
+            <span class="add-friend non-drag">+</span>
         </div>
         <!--会话列表-->
-        <div class="conversations" v-show="isShow">
+        <div class="conversations non-drag" v-show="isShow">
             <ul>
                 <li v-for="(conversation) in conversations" @click="showHistoryMessageByClick(conversation)"  v-bind:class="{active: conversation.destId==chatPerson.destId}">
                     <div >
@@ -67,7 +68,7 @@
             </ul>
         </div>
         <!--好友列表-->
-        <div class="relationships" v-show="isShow2">
+        <div class="relationships non-drag" v-show="isShow2">
             <ul>
                 <li @click="openNewFriends(isOpenNewFriend)">
                     <b class="arrow-border" v-bind:class="isOpenNewFriend? 'arrow-down':'arrow-right'"></b>
