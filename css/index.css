@@ -67,9 +67,9 @@ body{
     border-bottom:solid 1px #e7e7e7;
 }
 
-.left, .median{
+.left, .median, .right{
     float: left;
-    height: 530px;
+    height: 580px;
 }
 .right{
     position: fixed;

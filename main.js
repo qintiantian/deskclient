@@ -9,7 +9,7 @@ let win={}
 
 ipcMain.on('index-show', function () {
     //这个宽高度就是微信的宽度和高度850，580
-    win.mainWin = new BrowserWindow({width:850, height: 580, autoHideMenuBar: true, titleBarStyle: 'hiddenInset', frame:false})
+    win.mainWin = new BrowserWindow({width:850, height: 580, autoHideMenuBar: true, frame:false})
     let indexWin = win.mainWin
     indexWin.setMinimumSize(720,500)
     indexWin.setTitle('')
@@ -77,7 +77,7 @@ function createWindow () {
     loginWin.loadFile('login.html')
 
     // 打开开发者工具
-    // mainWin.webContents.openDevTools()
+    loginWin.webContents.openDevTools()
 
     // 当 window 被关闭，这个事件会被触发。
     loginWin.on('closed', () => {

@@ -1,6 +1,7 @@
 const {ipcRenderer, remote} = require('electron')
 const electron = require('electron')
 const Vue = require('./js/vue')
+const lodash = require('lodash')
 
 let d = { imageUrl: '', widthData: '', heightData: ''}
 
@@ -61,3 +62,13 @@ let vm = new Vue({
             }
         }
 })
+
+window.onresize = lodash.debounce(function () {
+    resize()
+}, 100)
+
+function resize(){
+    $(".right").width($(window).width() - leftWidth - median);
+    $(".left, .median, .right").height($(window).height())
+    $(".chat-area").height($(window).height() - topHeight - bottomHeight)
+}

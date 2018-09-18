@@ -1,25 +1,19 @@
-.container{
+body{
+    padding:0;
+    margin:0;
     background-color: #F5F5F5;
-    width:100%;
 }
-.content{
-    margin:0 auto;
-}
-input{
-    width:200px;
-}
-select{
-    width:210px;
-}
-input, select{
-    padding: 7px;
-}
-.form{
-    margin-top:90px;
+.container{
+    width:80%;
+    margin:20% auto;
+
 }
 .row{
     text-align: center;
-    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.btn-warp{
+    width: 100%;
 }
 .login-btn{
     background-color: #1AAD19;

@@ -448,12 +448,10 @@ $(function () {
     resize()
 })
 
-window.onresize = lodash.debounce(function () {
-    resize()
-}, 100)
+window.onresize = lodash.debounce(resize, 100)
 function resize(){
     $(".right").width($(window).width() - leftWidth - median);
-    $(".left, .median, .right").height($(window).height())
+    $(".median, .right, .left").height($(window).height())
     $(".chat-area").height($(window).height() - topHeight - bottomHeight)
 }
 
