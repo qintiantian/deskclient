@@ -69,7 +69,7 @@ body{
 
 .left, .median{
     float: left;
-    height: 505px;
+    height: 530px;
 }
 .right{
     position: fixed;
@@ -207,7 +207,7 @@ body{
 }
 
 .chat-area{
-    height:314px;
+    height:338px;
     overflow-y: scroll;
     font-size:14px;
 }

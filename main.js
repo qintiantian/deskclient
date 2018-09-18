@@ -8,7 +8,8 @@ const net =  require('net')
 let win={}
 
 ipcMain.on('index-show', function () {
-    win.mainWin = new BrowserWindow({width:850, height: 550, autoHideMenuBar: true, titleBarStyle: 'hiddenInset', frame:false})
+    //这个宽高度就是微信的宽度和高度850，580
+    win.mainWin = new BrowserWindow({width:850, height: 580, autoHideMenuBar: true, titleBarStyle: 'hiddenInset', frame:false})
     let indexWin = win.mainWin
     indexWin.setMinimumSize(720,500)
     indexWin.setTitle('')
