@@ -5,16 +5,19 @@
     <link rel="stylesheet" href="css/image-enlarge.css">
 </head>
 <body>
-    <div id="app" class="container">
+    <div id="app" class="container drag">
+        <div class="top">
+            <img src="imgs/close.png" @click="closeWin">
+        </div>
         <div class="main" id="mainDiv">
-            <img :src="imageUrl" @load="drawImage($event)" :style="{width: widthData+'px', height: heightData+'px'}">
+            <img id="img" :src="imageUrl" @load="drawImage($event)" class="non-drag" :style="{width: widthData+'px', height: heightData+'px'}">
         </div>
         <div class="footer">
             <img src="imgs/left.png">
             <img src="imgs/right.png">
-            <img src="imgs/narrow.png">
-            <img src="imgs/enlarge.png">
-            <img src="imgs/rotation.png">
+            <img :src="narrowSrc" @click="isNarrow && enlarge(false)">
+            <img :src="enlargeSrc" @click="isEnlarge && enlarge(true)">
+            <img src="imgs/rotation.png" @click="rotation">
         </div>
     </div>
 </body>

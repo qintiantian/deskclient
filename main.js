@@ -37,35 +37,39 @@ ipcMain.on('video-chat', function(event, data) {
 })
 
 ipcMain.on('image-enlarge', function(event, data){
-    /*win.imageEnlargeWin = new BrowserWindow({width: data.width+20, height: data.height+82, minWidth: 350, minHeight: 385,
-        maxWidth: 930, maxHeight: 662, autoHideMenuBar: true, center: true, minimizable: false, maximizable: false})*/
+    if(win.imageEnlargeWin != null){
+        win.imageEnlargeWin.close();
+    }
     let naturalWidth = data.width
     let naturalHeight = data.height
-    let iwidth = electron.screen.getPrimaryDisplay().workAreaSize.width;//屏幕宽度
-    let minwidth = 340; //图片最小宽度
-    var minheight = 390 //图片最小高度
-    let maxwidth = 830;//图片最大宽度
-    let boarderheight = 60 //底部高度+边框高度
+    let screenWidth = electron.screen.getPrimaryDisplay().workAreaSize.width;//屏幕宽度
+    let minWidth = 340; //图片最小宽度
+    var minHeight = 390 //图片最小高度
+    let maxWidth = 830;//图片最大宽度
+    let borderHeight = 80 //顶部高度+底部高度 50+30
     let width, height;
-    if(naturalWidth > iwidth){
-        width =  maxwidth;
-        height = (naturalHeight * maxwidth) / naturalWidth + boarderheight;
+    if(naturalWidth > screenWidth){
+        width =  maxWidth;
+        height = (naturalHeight * maxWidth) / naturalWidth + borderHeight;
     } else {
-        if(naturalWidth < minwidth){
-            width = minwidth
-            height = minheight + boarderheight
+        if(naturalWidth < minWidth){
+            width = minWidth
+            height = minHeight + borderHeight
         } else {
             width = naturalWidth
-            height = naturalHeight + boarderheight
+            height = naturalHeight + borderHeight
         }
     }
-    win.imageEnlargeWin = new BrowserWindow({width: width, height: height, autoHideMenuBar: true, center: true})
+    win.imageEnlargeWin = new BrowserWindow({width: width, height: height, autoHideMenuBar: true, center: true, frame: false, transparent: true})
     let imgV = win.imageEnlargeWin;
     imgV.setTitle('')
     imgV.loadFile('image-enlarge.html')
     imgV.webContents.openDevTools()
     imgV.webContents.on('did-finish-load', function () {
         imgV.webContents.send('image-src', data)
+    })
+    imgV.on('closed', () => {
+        win.imageEnlargeWin = null
     })
 })
 
@@ -77,7 +81,7 @@ function createWindow () {
     loginWin.loadFile('login.html')
 
     // 打开开发者工具
-    loginWin.webContents.openDevTools()
+    // loginWin.webContents.openDevTools()
 
     // 当 window 被关闭，这个事件会被触发。
     loginWin.on('closed', () => {
