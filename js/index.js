@@ -175,6 +175,24 @@ let vm = new Vue({
             }
             return format
         },
+        //获取消息图片列表
+        getMessageImages: function (conversation) {
+            if (modelData.destIdMap[conversation.destId].images == undefined || modelData.destIdMap[conversation.destId].images.length == 0){
+                modelData.destIdMap[conversation.destId].images = []
+                let path = '/user/historymessage/' + sharedObject.userId + '/' + conversation.destId + '/images'
+                $.get({
+                    url: sharedObject.url + path,
+                    timeout: sharedObject.timeout,
+                    headers: header
+                }).done(function (res) {
+                    if (res != null && res != []) {
+                        for(let i in res){
+                            modelData.destIdMap[conversation.destId].images.push(sharedObject.imgUrl+"/"+res[i]);
+                        }
+                    }
+                })
+            }
+        },
         showHistoryMessageByClick: function (conversation) {
             this.sendMessage = ''
             modelData.showMoreFlag = !modelData.destIdMap[conversation.destId].scrollEnd
@@ -202,6 +220,7 @@ let vm = new Vue({
                 vm.scrollToEnd()
                 modelData.unReadMsgCnt[conversation.destId] = 0
             }
+            this.getMessageImages(conversation)
         },
         showMore: function(){
             let conversation = {'destId': this.chatPerson.destId, 'msgId': modelData.messages[0].msgId}
@@ -373,20 +392,14 @@ let vm = new Vue({
             sharedObject.chatPerson =  this.chatPerson
             ipcRenderer.send('video-chat', this.chatPerson.destId)
         },
-        imageEnlarge: function(event) {
+        imageEnlarge: function(event, destId) {
             //获取原始尺寸
             let image = new Image()
             image.src = event.target.src
             let naturalWidth = image.width
             let naturalHeight = image.height
-            let images = ['http://39.106.133.40/group1/M00/00/00/rBET9lugeC-AHAtGAAHm3FUNUmw8191228',
-                'http://39.106.133.40/group1/M00/00/00/rBET9lufifqATfJKAAagDklG3OI5090311',
-            'http://39.106.133.40/group1/M00/00/00/rBET9luc1RSAPdIJAAAcRZa6bNE5696896',
-            'http://39.106.133.40/group1/M00/00/00/rBET9lufe0CAZj7dAAAGiyj23_o9147121',
-            'http://39.106.133.40/group1/M00/00/00/rBET9lugpQyAcKxWAAAP18ylD1k0410442']
-            event.target.src='http://39.106.133.40/group1/M00/00/00/rBET9luc1RSAPdIJAAAcRZa6bNE5696896';
-            //let index = $(".images").index(event.target);
-            let index = 2;
+            let index = modelData.destIdMap[destId].images.indexOf(image.src)
+            let images = modelData.destIdMap[destId].images;
             let data = {width: naturalWidth, height: naturalHeight, src: event.target.src,
                 prev:images.slice(0,index), next: images.slice(index+1, images.length)}
             ipcRenderer.send('image-enlarge', data)
