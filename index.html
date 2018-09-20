@@ -143,7 +143,7 @@
                         <div class="img-msg" v-if="message.sendId==user.userId">
                             <a class="myself"><img v-bind:src="user.imgUrl"></a>
                             <div v-if="message.msgType==3">
-                                <a class="myself-content" @click="imageEnlarge($event)"><img :src="sharedObject.imgUrl+'/'+message.content" class=""></a>
+                                <a class="myself-content" @click="imageEnlarge($event)"><img :src="sharedObject.imgUrl+'/'+message.content"></a>
                             </div>
                             <div v-if="message.msgType==0">
                                 <span class="myself">{{message.content}}</span>
@@ -152,7 +152,7 @@
                         <div class="img-msg" v-else>
                             <a class="other-person"><img v-bind:src="chatPerson.imgUrl"></a>
                             <div v-if="message.msgType==3">
-                                <a class="other-person-content" @click="imageEnlarge($event)"><img :src="sharedObject.imgUrl+'/'+message.content" class=""></a>
+                                <a class="other-person-content" @click="imageEnlarge($event)"><img :src="sharedObject.imgUrl+'/'+message.content"></a>
                             </div>
                             <div v-if="message.msgType==0">
                                 <span class="other-person">{{message.content}}</span>

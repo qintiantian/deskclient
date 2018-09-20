@@ -13,10 +13,30 @@
             <img id="img" :src="imageUrl" @load="drawImage($event)" class="non-drag" :style="{width: widthData+'px', height: heightData+'px'}">
         </div>
         <div class="footer">
-            <img src="imgs/left.png">
-            <img src="imgs/right.png">
-            <img :src="narrowSrc" @click="isNarrow && enlarge(false)">
-            <img :src="enlargeSrc" @click="isEnlarge && enlarge(true)">
+            <a v-if="isLeft">
+                <img src="imgs/left.png" @click="page(true)">
+            </a>
+            <a v-else>
+                <img src="imgs/left-1.png">
+            </a>
+            <a v-if="isRight">
+                <img src="imgs/right.png" @click="page(false)">
+            </a>
+            <a v-else>
+                <img src="imgs/right-1.png">
+            </a>
+            <a v-if="isNarrow">
+                <img src="imgs/narrow.png" @click="enlarge(false)">
+            </a>
+            <a v-else>
+                <img src="imgs/narrow-1.png">
+            </a>
+            <a v-if="isEnlarge">
+                <img src="imgs/enlarge.png" @click="enlarge(true)">
+            </a>
+            <a v-else>
+                <img src="imgs/enlarge-1.png">
+            </a>
             <img src="imgs/rotation.png" @click="rotation">
         </div>
     </div>

@@ -40,7 +40,7 @@ ipcMain.on('image-enlarge', function(event, data){
     if(win.imageEnlargeWin != null){
         win.imageEnlargeWin.close();
     }
-    let naturalWidth = data.width
+    /*let naturalWidth = data.width
     let naturalHeight = data.height
     let screenWidth = electron.screen.getPrimaryDisplay().workAreaSize.width;//屏幕宽度
     let minWidth = 340; //图片最小宽度
@@ -59,8 +59,8 @@ ipcMain.on('image-enlarge', function(event, data){
             width = naturalWidth
             height = naturalHeight + borderHeight
         }
-    }
-    win.imageEnlargeWin = new BrowserWindow({width: width, height: height, autoHideMenuBar: true, center: true, frame: false, transparent: true})
+    }*/
+    win.imageEnlargeWin = new BrowserWindow({/*width: 830, height: 700,*/ autoHideMenuBar: true, center: true, frame: false, transparent: true})
     let imgV = win.imageEnlargeWin;
     imgV.setTitle('')
     imgV.loadFile('image-enlarge.html')

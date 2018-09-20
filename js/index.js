@@ -379,7 +379,16 @@ let vm = new Vue({
             image.src = event.target.src
             let naturalWidth = image.width
             let naturalHeight = image.height
-            let data = {width: naturalWidth, height: naturalHeight, src: event.target.src}
+            let images = ['http://39.106.133.40/group1/M00/00/00/rBET9lugeC-AHAtGAAHm3FUNUmw8191228',
+                'http://39.106.133.40/group1/M00/00/00/rBET9lufifqATfJKAAagDklG3OI5090311',
+            'http://39.106.133.40/group1/M00/00/00/rBET9luc1RSAPdIJAAAcRZa6bNE5696896',
+            'http://39.106.133.40/group1/M00/00/00/rBET9lufe0CAZj7dAAAGiyj23_o9147121',
+            'http://39.106.133.40/group1/M00/00/00/rBET9lugpQyAcKxWAAAP18ylD1k0410442']
+            event.target.src='http://39.106.133.40/group1/M00/00/00/rBET9luc1RSAPdIJAAAcRZa6bNE5696896';
+            //let index = $(".images").index(event.target);
+            let index = 2;
+            let data = {width: naturalWidth, height: naturalHeight, src: event.target.src,
+                prev:images.slice(0,index), next: images.slice(index+1, images.length)}
             ipcRenderer.send('image-enlarge', data)
         },
         init: function () {
